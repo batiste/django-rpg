@@ -7,4 +7,6 @@ A Role Playing Game skeleton that use django and gevent. To start the server, ru
 
 Example chat room from http://bitbucket.org/denis/gevent/src/tip/examples/webchat/chat/views.py
 
+Tested on Opera, Firefox, Chrome.
+
 

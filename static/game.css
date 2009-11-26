@@ -1,7 +1,37 @@
+
+#main {
+    width:760px;
+    margin:0 auto;
+}
+
+body {
+    font-size:12px;
+    font-family:verdana, arial, sans-serif;
+    background:#333;
+}
+
 #map {
     position:relative;
-    margin:20px;
+    width:560px;
+    height:480px;
+    border:1px #eee solid;
 }
+
+
+#input {
+    width:552px;
+    padding:5px;
+    background:#666;
+}
+
+#tileset {
+    float:right;
+}
+#grid-serialized {
+    width:600px;
+    height:100px;
+}
+
 .bloc {
     background:url(tileset.png) top left no-repeat;
     position:absolute;
@@ -9,6 +39,7 @@
     width:16px;
     height:16px;
 }
+
 #select {
     position:absolute;
     width:16px;
@@ -16,41 +47,29 @@
     border:1px red solid;
     left:-100px;
 }
+
 .player {
     position:absolute;
     background:url(walk2.png) top left no-repeat;
     width:24px;
     height:32px;
 }
-.player span {
-    font-size:11px;
+
+.player .text {
     color:#fff;
     background:#333;
-    padding:2px 3px;
+    padding:2px 6px;
     margin-left:28px;
+    margin-top:-20px;
     position:absolute;
+    opacity:0.6;
 }
 
 .player .name {
-    opacity:0.5;
+    float:left;
+    font-weight:bold;
 }
 
 .player .message {
-    margin-top:1.4em;
-}
-
-#input {
-    position:absolute;
-    left:35px;
-    top:505px;
-}
-
-#tileset {
-    top:100px;
-    left:600px;
-    position:absolute;
-}
-#grid-serialized {
-    width:600px;
-    height:100px;
+    float:left;
 }

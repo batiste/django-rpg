@@ -9,7 +9,7 @@ from django.core.management import call_command
 from django.core.signals import got_request_exception
 
 sys.path.append('..')
-os.environ['DJANGO_SETTINGS_MODULE'] = 'game.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 
 def exception_printer(sender, **kwargs):
     traceback.print_exc()

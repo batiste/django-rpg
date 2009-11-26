@@ -116,18 +116,21 @@ $(function() {
     map.html(map_content);
 
 
-    function player(init_position, key, name) {
+    function player(init_position, key, pname) {
         this.position = [init_position[0], init_position[1]];
         this.last_sent_position = [init_position[0], init_position[1]];
         this.target_position = [init_position[0], init_position[1]];
-        this.name = name;
+        this.pname = pname;
         this.key = key;
         this.walking = false;
         this.speed = 3;
-        this.element = $('<div class="player"><span class="name">'+this.name+'</span><span class="message"></span></div>');
+        this.element = $('<div class="player">\
+            <span class="text"><span class="name">'+this.pname+'</span>\
+            <span class="message"></span></span>\
+        </div>');
         this.cycle = 0;
         this.start_cycle = 0;
-        $('body').append(this.element);
+        map.append(this.element);
         this.message_element = this.element.find('.message')
         this.message_timeout = false;
         this.move(this.position);
@@ -228,7 +231,8 @@ $(function() {
     };
 
     var personnal_key = false
-    var player_name = prompt("Choose your username");
+    /*var  = prompt("Choose your username");*/
+    var player_name = "toto";
     $.postJSON("/a/player/new", {'body':player_name}, function(response) {
         response = $.evalJSON(response);
         personnal_key = response["new_player"]["key"];
@@ -239,9 +243,11 @@ $(function() {
 
     $("#messageform").submit(function(e) {
         e.preventDefault();
-        var message = $('#message').val();
-        $.postJSON("/a/message/new", {'body':message}, function(response) {
-            me.say(message);
+        var message = $('#message');
+        message.focus();
+        $.postJSON("/a/message/new", {'body':message.val()}, function(response) {
+            me.say(message.val());
+            $('#message').val('');
         });
         return false;
     });
@@ -290,7 +296,7 @@ $(function() {
                 }
                 var p = get_player(key);
                 if(p === false) {
-                    p = new player([pos[0], pos[1]], key, item['name'])
+                    p = new player([pos[0], pos[1]], key, item['name']);
                     other_players.push(p);
                 }
                 p.target_position = [pos[0], pos[1]];

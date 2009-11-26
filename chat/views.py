@@ -28,36 +28,34 @@ class ChatRoom(object):
         return None
 
     def player_new(self, request):
-        key = request.session.session_key
+        key = str(uuid.uuid4())
         name = request.POST['body']
         player = {'name':name, 'key':key}
-        if self.get_player(key):
-            return json_response({'new_player':player})
         self.players.append(player)
         self.new_room_event.set()
         self.new_room_event.clear()
-        return json_response({'new_player':player})
+        response = json_response({'new_player':player})
+        response.set_cookie('rpg_key', key)
+        return response 
 
     def player_update_position(self, request):
-        key = request.session.session_key
+        key = request.COOKIES['rpg_key']
         player = self.get_player(key)
-        if player is None:
-            return json_response("error reload")
         position = request.POST['body']
         player['position'] = position
         self.new_room_event.set()
         self.new_room_event.clear()
+        print "player update pos"
         return json_response({'update_player_position':[key, position]})
 
     def message_new(self, request):
-        key = request.session.session_key
+        key = request.COOKIES['rpg_key']
         msg = request.POST['body']
         player = self.get_player(key)
-        if player is None:
-            return json_response("error reload")
         player['last_message'] = msg
         self.new_room_event.set()
         self.new_room_event.clear()
+        print "player update pos"
         return json_response({'last_message':[key, msg]})
 
     def room_updates(self, request):
