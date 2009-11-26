@@ -26,7 +26,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 )
-ROOT_URLCONF = 'game.urls'
+ROOT_URLCONF = 'urls'
 TEMPLATE_DIRS = (
     join(__dir__, 'templates')
 )
@@ -34,5 +34,5 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
-    'game.chat',
+    'chat',
 )
