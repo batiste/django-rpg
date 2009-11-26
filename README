@@ -1,0 +1,10 @@
+A we based Role Playing Game
+============================
+
+A Role Playing Game skeleton that use django and gevent. To start the server, run::
+
+    $ python run.py
+
+Example chat room from http://bitbucket.org/denis/gevent/src/tip/examples/webchat/chat/views.py
+
+
