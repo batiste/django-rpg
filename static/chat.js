@@ -14,62 +14,7 @@
 
 $(document).ready(function() {
 
-var updater = {
-    errorSleepTime: 500,
-    cursor: null,
-
-    poll: function() {
-        var args = {"_xsrf": getCookie("_xsrf")};
-        if (updater.cursor) args.cursor = updater.cursor;
-        $.ajax({
-            url: "/a/room/updates",
-            type: "POST",
-            dataType: "text",
-            data: $.param(args),
-            success: updater.onSuccess,
-            error: updater.onError
-        });
-    },
-
-    onSuccess: function(response) {
-        //try {
-            var mapdata = $.evalJSON(response);
-            $.receive_data(mapdata)
-            //var pos = mapdata['players'][0]['position'].split(',');
-            //$.player_target_position[0] = parseInt(pos[0])
-            //$.player_target_position[1] = parseInt(pos[1])
-
-        //} catch (e) {
-        //    updater.onError();
-        //    return;
-        //}
-        updater.errorSleepTime = 500;
-        window.setTimeout(updater.poll, 0);
-    },
-
-    onError: function(response) {
-        updater.errorSleepTime *= 2;
-        console.log("Poll error; sleeping for", updater.errorSleepTime, "ms");
-        window.setTimeout(updater.poll, updater.errorSleepTime);
-    }
-};
-    
-    updater.poll();
 
 
-function getCookie(name) {
-    var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
-    return r ? r[1] : undefined;
-}
-
-jQuery.fn.formToDict = function() {
-    var fields = this.serializeArray();
-    var json = {}
-    for (var i = 0; i < fields.length; i++) {
-        json[fields[i].name] = fields[i].value;
-    }
-    if (json.next) delete json.next;
-    return json;
-};
 
 });
