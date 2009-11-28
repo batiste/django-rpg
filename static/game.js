@@ -8,6 +8,8 @@ $(function() {
     if (!window.console) window.console = {};
     if (!window.console.log) window.console.log = function() {};
 
+
+    var event_cursor = false;
     // polling update
     var updater = {
         errorSleepTime: 500,
@@ -15,6 +17,8 @@ $(function() {
 
         poll: function() {
             var args = {"_xsrf": getCookie("_xsrf")};
+            if(event_cursor)
+                args["cursor"] = event_cursor
             if (updater.cursor) args.cursor = updater.cursor;
             $.ajax({
                 url: "/a/room/updates",
@@ -271,11 +275,14 @@ $(function() {
         };
     };
 
-    var personnal_key = false
+    var personnal_key = false;
     var player_name = prompt("Choose your hero name");
     $.postJSON("/a/player/new", {'body':player_name}, function(response) {
         response = $.evalJSON(response);
-        personnal_key = response["new_player"]["key"];
+        personnal_key = response["you"]["key"];
+        for(var i=0; i < response["events"].length; i++) {
+            handle_event(response["events"][i]);
+        };
     });
 
     var me = new player([30, 100], personnal_key, player_name);
@@ -326,28 +333,50 @@ $(function() {
     setInterval(_player_send, 1000);
 
     $.receive_data = function(json) {
-        for(var i=0; i <json["players"].length; i++) {
-            var item = json["players"][i];
-            var key = item['key'];
-            if(key != personnal_key) {
-                if(item['position']){
-                    var _pos = item['position'].split(',');
-                    var pos = [parseInt(_pos[0]), parseInt(_pos[1])];
-                } else {
-                    var pos = [50, 60];
-                }
-                var p = get_player(key);
-                if(p === false) {
-                    p = new player([pos[0], pos[1]], key, item['name']);
-                    other_players.push(p);
-                }
-                p.target_position = [pos[0], pos[1]];
-                if(item['last_message']){
-                    p.say(item['last_message'])
-                }
-            }
+        for(var i=0; i <json.length; i++) {
+            handle_event(json[i]);
         };
     };
+
+    function handle_event(event) {
+        if(event[0] == 'update_player_position') {
+            var p = get_player(event[1][0]);
+            if(event[1][0] == personnal_key)
+                return;
+            var _pos = event[1][1].split(',');
+            var pos = [parseInt(_pos[0]), parseInt(_pos[1])];
+            p.target_position = pos;
+        }
+        if(event[0] == 'new_player') {
+            var item = event[1];
+            if(item['key'] == personnal_key)
+                return;
+            if(item['position']){
+                var _pos = item['position'].split(',');
+                var pos = [parseInt(_pos[0]), parseInt(_pos[1])];
+            } else {
+                var pos = [50, 60];
+            }
+            var p = get_player(item['key']);
+            if(p === false) {
+                p = new player([pos[0], pos[1]], item['key'], item['name']);
+                other_players.push(p);
+            }
+            p.target_position = [pos[0], pos[1]];
+            if(item['new_message']) {
+                p.say(item['new_message'])
+            }
+        };
+        if(event[0] == 'last_message') {
+            if(event[1][0] == personnal_key)
+                return;
+            var p = get_player(event[1][0]);
+            p.say(event[1][1]);
+        }
+        if(event[0] == 'update_cursor') {
+            event_cursor = event[1];
+        };
+    }
 
     // keyboard stuff
     var keyboard = {'up':0, 'left':0, 'right':0, 'down':0};

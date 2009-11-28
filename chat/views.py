@@ -13,13 +13,25 @@ class ChatRoom(object):
         self.last_message = []
         self.players = []
         self.cache = []
-        self.new_room_event = Event()
+        self.room_event = Event()
+        self.event_cursor = 0
+        self.event_buffer = []
+        for v in range(0, 9):
+            self.event_buffer.append(None)
 
     def main(self, request):
         return render_to_response(
             'index.html',
             {'MEDIA_URL': settings.MEDIA_URL}
         )
+
+    def new_room_event(self, value):
+        self.event_cursor += 1
+        if self.event_cursor >= len(self.event_buffer):
+            self.event_cursor = 0
+        self.event_buffer[self.event_cursor] = value
+        self.room_event.set()
+        self.room_event.clear()
 
     def get_player(self, key):
         for p in self.players:
@@ -30,39 +42,55 @@ class ChatRoom(object):
     def player_new(self, request):
         key = str(uuid.uuid4())
         name = request.POST['body']
-        player = {'name':name, 'key':key}
-        self.players.append(player)
-        self.new_room_event.set()
-        self.new_room_event.clear()
-        response = json_response({'new_player':player})
+        new_player = {'name':name, 'key':key}
+        event_list = []
+        # send all the other player
+        for player in self.players:
+            event_list.append(['new_player', player])
+        self.players.append(new_player)
+        self.new_room_event(['new_player', new_player])
+        response = json_response({'you':new_player, 'events':event_list})
         response.set_cookie('rpg_key', key)
-        return response 
+        return response
 
     def player_update_position(self, request):
         key = request.COOKIES['rpg_key']
         player = self.get_player(key)
         position = request.POST['body']
         player['position'] = position
-        self.new_room_event.set()
-        self.new_room_event.clear()
-        print "player update pos"
-        return json_response({'update_player_position':[key, position]})
+        self.new_room_event(['update_player_position', [key, position]])
+        return json_response([1])
 
     def message_new(self, request):
         key = request.COOKIES['rpg_key']
         msg = request.POST['body']
         player = self.get_player(key)
         player['last_message'] = msg
-        self.new_room_event.set()
-        self.new_room_event.clear()
-        print "player update pos"
-        return json_response({'last_message':[key, msg]})
+        self.new_room_event(['last_message', [key, msg]])
+        return json_response([1])
 
     def room_updates(self, request):
-        value = self.new_room_event.wait()
-        return json_response({
-            'players': self.players
-        })
+
+        value = self.room_event.wait()
+        
+        cursor = int(request.POST.get('cursor', self.event_cursor+1))
+        if cursor == self.event_cursor:
+            return json_response([1])
+        event_list = []
+        if cursor >= len(self.event_buffer):
+            cursor = 0
+        while(cursor != self.event_cursor):
+            event = self.event_buffer[cursor]
+            if event:
+                event_list.append(self.event_buffer[cursor])
+            cursor += 1
+            if cursor >= len(self.event_buffer):
+                cursor = 0
+
+        event_list.append(self.event_buffer[self.event_cursor])
+        event_list.append(['update_cursor', self.event_cursor])
+
+        return json_response(event_list)
 
 
 room = ChatRoom()
