@@ -71,14 +71,21 @@ class ChatRoom(object):
 
     def room_updates(self, request):
 
-        value = self.room_event.wait()
+        self.room_event.wait()
         
-        cursor = int(request.POST.get('cursor', self.event_cursor+1))
+        cursor = int(request.POST.get('cursor', False))
+        # up to date
         if cursor == self.event_cursor:
             return json_response([1])
-        event_list = []
+        if cursor == False:
+            cursor = self.event_cursor
+        # increment to be at the same level at the event
+        cursor += 1
         if cursor >= len(self.event_buffer):
             cursor = 0
+        
+        event_list = []
+        # if there is more than just on event
         while(cursor != self.event_cursor):
             event = self.event_buffer[cursor]
             if event:
