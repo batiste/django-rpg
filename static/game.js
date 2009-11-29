@@ -75,22 +75,91 @@ $(function() {
     var choosen_tile = [0, 0];
     var mouseDown = false;
 
-    var grid_width = 35;
-    var grid_height = 30;
-    var map_content = "";
-    var top_offest = 0;
-    var left_offset = 0;
-    var grid = [];
+    // GRID
 
-    function get_map(name) {
-        var results = window.location.href.split('map=');
-        return results[1];
-    }
+    function grid(w, h, blocs_init) {
+        this.width = w;
+        this.height = h;
+        this.blocs = [];
+        this.forbidden = [
+            [9, 1],[10, 2],[0, 9],[1, 9],[2, 9],[0, 10],[1, 10],
+            [2, 10],[3, 10],[4, 10],[5, 10],[8, 9], [6, 8], [6, 10],
+            [7, 9],[7, 8],[7, 10],[6, 7], [6, 9],[9, 7],[10, 7],
+            [8, 8], [8 ,10], [9, 8],
+            [10, 8],[9, 9],[9, 10],[10, 10]
+        ];
+        // create the grid
+        var top_offest = 0;
+        var left_offset = 0;
+        for(var i=0; i<this.height; i++) {
+            var line = [];
+            var top_offest = i * 16;
+            for(var j=0; j<this.width; j++) {
+                left_offset = j * 16;
+                var bloc = $('<div class="bloc" id="bloc-'+ i
+                    +'-'+ j +'" style="top:' + top_offest
+                    + 'px;left:'+ left_offset + 'px;"></div>');
+                map.append(bloc);
+                if(blocs_init)
+                    line.push([bloc, blocs_init[i][j]]);
+                else
+                    line.push([bloc, [1, 1]]);
+            };
+            this.blocs.push(line);
+        };
+        if(blocs_init)
+            this.load_new_map(blocs_init);
+    };
 
-    if($('#grid-serialized').val())
-        grid = $.evalJSON($('#grid-serialized').val());
-    else if(get_map())
-        grid = $.evalJSON(get_map());
+    grid.prototype.get_bloc = function(indexes) {
+        return this.blocs[indexes[1]][indexes[0]][1];
+    };
+
+    grid.prototype.paint_bloc = function(bloc) {
+        //var bloc = $(e.target);
+        if(bloc.hasClass('bloc')) {
+            var b_string = bloc.attr('id').split('-');
+            this.blocs[parseInt(b_string[1])][parseInt(b_string[2])][1] = choosen_tile;
+            bloc.css('background-position', tile_pos_css);
+        };
+    };
+
+    grid.prototype.is_bloc_walkable = function(bloc) {
+        for(var i=0; i < this.forbidden.length; i++) {
+            if(this.forbidden[i][0] == bloc[0]
+                && this.forbidden[i][1] == bloc[1])
+                    return false;
+        };
+        return true;
+    };
+
+    grid.prototype.bloc_from_player_pos = function(pos) {
+        var bloc_indexes = [
+            Math.floor((pos[0]+12) / 16),
+            Math.floor((pos[1]+32) / 16)
+        ];
+        //var tile_pos = map.position();
+        //$('#select').css('left', bloc[0]*16 + tile_pos.left+'px');
+        //$('#select').css('top', bloc[1]*16 + tile_pos.top+'px');
+        return this.get_bloc(bloc_indexes);
+    };
+
+    grid.prototype.load_new_map = function(blocs_init) {
+        for(var i=0; i < this.height; i++) {
+            for(var j=0; j < this.width; j++) {
+                var bloc = this.blocs[i][j];
+                bloc[1] = blocs_init[i][j];
+                var tile_pos_css = (-bloc[1][0]*17-1)+'px ' + (-bloc[1][1]*17-1)+'px';
+                bloc[0].css('background-position', tile_pos_css);
+            };
+        };
+        /*if(next_pos[0] < 0)
+            console.log("oki")*/
+    };
+
+    var grid1 = new grid(
+        35, 30, $.evalJSON($('#grid-serialized').val())
+    );
 
     tileset.click(function(e) {
         var tile_pos = tileset.position();
@@ -103,43 +172,6 @@ $(function() {
         $('#select').css('top', choosen_tile[1]*17 + tile_pos.top+'px');
     });
 
-    function paint_bloc(e) {
-        var bloc = $(e.target);
-        if(bloc.hasClass('bloc')) {
-            var b_string = bloc.attr('id').split('-');
-            grid[parseInt(b_string[1])][parseInt(b_string[2])] = choosen_tile;
-            bloc.css('background-position', tile_pos_css);
-        }
-    };
-
-    function get_bloc_from_player_pos(pos) {
-        var bloc = [
-                Math.floor((pos[0]+12) / 16),
-                Math.floor((pos[1]+32) / 16)
-        ];
-        var tile_pos = map.position();
-        //$('#select').css('left', bloc[0]*16 + tile_pos.left+'px');
-        //$('#select').css('top', bloc[1]*16 + tile_pos.top+'px');
-        return grid[bloc[1]][bloc[0]];
-    };
-
-    var forbidden_bloc = [
-        [9, 1],[10, 2],[0, 9],[1, 9],[2, 9],[0, 10],[1, 10],
-        [2, 10],[3, 10],[4, 10],[5, 10],[8, 9], [6, 8], [6, 10],
-        [7, 9],[7, 8],[7, 10],[6, 7], [6, 9],[9, 7],[10, 7],
-        [8, 8], [8 ,10], [9, 8],
-        [10, 8],[9, 9],[9, 10],[10, 10]
-    ];
-
-    function is_bloc_walkable(bloc) {
-        for(var i=0; i < forbidden_bloc.length; i++) {
-            if(forbidden_bloc[i][0] == bloc[0]
-                && forbidden_bloc[i][1] == bloc[1])
-                    return false;
-        };
-        return true;
-    };
-
     map.click(function(e) {
         paint_bloc(e);
         $('#grid-serialized').val($.toJSON(grid));
@@ -148,45 +180,20 @@ $(function() {
     map.mousedown(function(e) {
         mouseDown = true;
     });
+
     map.mouseup(function(e) {
         mouseDown = false;
         $('#grid-serialized').val($.toJSON(grid));
     });
 
-    map.mousemove(function(e){
+    map.mousemove(function(e) {
         if(mouseDown) {
             paint_bloc(e);
             return false;
-        }
+        };
     });
 
-    // create the grid
-    var grid_exist = grid.length > 0;
-    if(!grid_exist)
-        tile_pos_css = '-18px -18px';
-
-    for(var i=0; i<grid_height; i++) {
-        var line = [];
-        top_offest = i*16;
-        for(var j=0; j<grid_width; j++) {
-            left_offset = j*16;
-            if(grid_exist) {
-                tile_pos_css = (-grid[i][j][0]*17-1)+'px '+(-grid[i][j][1]*17-1)+'px';
-            } else {
-                line.push([1,1]);
-            }
-
-            map_content += ('<div class="bloc" id="bloc-'+ i
-                +'-'+ j +'" style="top:' + top_offest
-                + 'px;left:'+ left_offset
-                + 'px;background-position:'+tile_pos_css+'"></div>');
-
-        };
-        if(!grid_exist)
-            grid.push(line);
-    };
-    map.html(map_content);
-
+    // PLAYER
 
     function player(init_position, key, pname) {
         this.position = [init_position[0], init_position[1]];
@@ -247,9 +254,14 @@ $(function() {
                 this.target_position[0] + parseInt(this.speed * vect[0]),
                 this.target_position[1] + parseInt(this.speed * vect[1])
             ];
-            var bloc = get_bloc_from_player_pos(next_pos);
-            if(is_bloc_walkable(bloc))
+            var bloc = grid1.bloc_from_player_pos(next_pos);
+            /*if(bloc === undefined) {
+                grid1.load_new_map(next_pos)
+            }*/
+            //console.log(grid1.is_bloc_walkable(bloc))
+            if(grid1.is_bloc_walkable(bloc)) {
                 this.target_position = next_pos;
+            }
         };
     };
 
@@ -342,7 +354,7 @@ $(function() {
         }
         return false;
     }
-    
+
     var _players_move = function() {
         me.update_target_position();
         me.move_to_target();
@@ -359,7 +371,7 @@ $(function() {
         };
     };
     me.anim_interval = setInterval(_anim, 120);
-    
+
     // send the new position to the server
     var _player_send = function(){ me.send_position(); }
     setInterval(_player_send, 1000);
