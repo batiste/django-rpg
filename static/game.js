@@ -72,8 +72,7 @@ $(function() {
 
     var map = $('#map');
     var tileset = $('#tileset');
-    var choosen_tile = [0,0];
-    var tile_pos = [-1,-1];
+    var choosen_tile = [0, 0];
     var mouseDown = false;
 
     var grid_width = 35;
@@ -83,8 +82,7 @@ $(function() {
     var left_offset = 0;
     var grid = [];
 
-    function get_map(name)
-    {
+    function get_map(name) {
         var results = window.location.href.split('map=');
         return results[1];
     }
@@ -95,13 +93,14 @@ $(function() {
         grid = $.evalJSON(get_map());
 
     tileset.click(function(e) {
+        var tile_pos = tileset.position();
         choosen_tile = [
-                Math.floor((e.clientX-600) / 17),
-                Math.floor((e.clientY-100) / 17)
+                Math.floor((e.clientX-tile_pos.left) / 17),
+                Math.floor((e.clientY-tile_pos.top) / 17)
             ];
-        tile_pos = (-choosen_tile[0]*17-1)+'px '+(-choosen_tile[1]*17-1)+'px';
-        $('#select').css('left', choosen_tile[0]*17+600);
-        $('#select').css('top', choosen_tile[1]*17+100);
+        tile_pos_css = (-choosen_tile[0]*17-1)+'px ' + (-choosen_tile[1]*17-1)+'px';
+        $('#select').css('left', choosen_tile[0]*17 + tile_pos.left+'px');
+        $('#select').css('top', choosen_tile[1]*17 + tile_pos.top+'px');
     });
 
     function paint_bloc(e) {
@@ -109,7 +108,7 @@ $(function() {
         if(bloc.hasClass('bloc')) {
             var b_string = bloc.attr('id').split('-');
             grid[parseInt(b_string[1])][parseInt(b_string[2])] = choosen_tile;
-            bloc.css('background-position', tile_pos);
+            bloc.css('background-position', tile_pos_css);
         }
     };
 
@@ -136,7 +135,7 @@ $(function() {
     // create the grid
     var grid_exist = grid.length > 0;
     if(!grid_exist)
-        tile_pos = '-18px -18px';
+        tile_pos_css = '-18px -18px';
 
     for(var i=0; i<grid_height; i++) {
         var line = [];
@@ -144,7 +143,7 @@ $(function() {
         for(var j=0; j<grid_width; j++) {
             left_offset = j*16;
             if(grid_exist) {
-                tile_pos = (-grid[i][j][0]*17-1)+'px '+(-grid[i][j][1]*17-1)+'px';
+                tile_pos_css = (-grid[i][j][0]*17-1)+'px '+(-grid[i][j][1]*17-1)+'px';
             } else {
                 line.push([1,1]);
             }
@@ -152,7 +151,7 @@ $(function() {
             map_content += ('<div class="bloc" id="bloc-'+ i
                 +'-'+ j +'" style="top:' + top_offest
                 + 'px;left:'+ left_offset
-                + 'px;background-position:'+tile_pos+'"></div>');
+                + 'px;background-position:'+tile_pos_css+'"></div>');
 
         };
         if(!grid_exist)
