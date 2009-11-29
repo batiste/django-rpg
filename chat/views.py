@@ -40,9 +40,12 @@ class ChatRoom(object):
         return None
 
     def player_new(self, request):
-        key = str(uuid.uuid4())
-        name = request.POST['body']
-        new_player = {'name':name, 'key':key}
+        key = request.COOKIES.get('rpg_key', False)
+        new_player = self.get_player(key)
+        if  not new_player:
+            key = str(uuid.uuid4())
+            name = request.POST['body']
+            new_player = {'name':name, 'key':key}
         event_list = []
         # send all the other player
         for player in self.players:

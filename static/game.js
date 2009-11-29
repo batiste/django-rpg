@@ -112,6 +112,34 @@ $(function() {
         }
     };
 
+    function get_bloc_from_player_pos(pos) {
+        var bloc = [
+                Math.floor((pos[0]+12) / 16),
+                Math.floor((pos[1]+32) / 16)
+        ];
+        var tile_pos = map.position();
+        //$('#select').css('left', bloc[0]*16 + tile_pos.left+'px');
+        //$('#select').css('top', bloc[1]*16 + tile_pos.top+'px');
+        return grid[bloc[1]][bloc[0]];
+    };
+
+    var forbidden_bloc = [
+        [9, 1],[10, 2],[0, 9],[1, 9],[2, 9],[0, 10],[1, 10],
+        [2, 10],[3, 10],[4, 10],[5, 10],[8, 9], [6, 8], [6, 10],
+        [7, 9],[7, 8],[7, 10],[6, 7], [6, 9],[9, 7],[10, 7],
+        [8, 8], [8 ,10], [9, 8],
+        [10, 8],[9, 9],[9, 10],[10, 10]
+    ];
+
+    function is_bloc_walkable(bloc) {
+        for(var i=0; i < forbidden_bloc.length; i++) {
+            if(forbidden_bloc[i][0] == bloc[0]
+                && forbidden_bloc[i][1] == bloc[1])
+                    return false;
+        };
+        return true;
+    };
+
     map.click(function(e) {
         paint_bloc(e);
         $('#grid-serialized').val($.toJSON(grid));
@@ -215,8 +243,13 @@ $(function() {
     player.prototype.update_target_position = function() {
         var vect = keyboard_vector();
         if(vect) {
-            this.target_position[0] += parseInt(this.speed * vect[0]);
-            this.target_position[1] += parseInt(this.speed * vect[1]);
+            var next_pos = [
+                this.target_position[0] + parseInt(this.speed * vect[0]),
+                this.target_position[1] + parseInt(this.speed * vect[1])
+            ];
+            var bloc = get_bloc_from_player_pos(next_pos);
+            if(is_bloc_walkable(bloc))
+                this.target_position = next_pos;
         };
     };
 
