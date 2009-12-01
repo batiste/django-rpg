@@ -46,6 +46,14 @@ class ChatRoom(object):
                 return p
         return None
 
+    def remove_player(self, key):
+        i = 0
+        for p in self.players:
+            if p['key'] == key:
+                self.players.remove(p)
+                return p
+        return None
+
     def player_new(self, request):
         key = request.COOKIES.get('rpg_key', False)
         new_player = self.get_player(key)
@@ -111,15 +119,28 @@ class ChatRoom(object):
 
     def change_room(self, request):
         key = request.COOKIES['rpg_key']
-        x, y = request.POST.get('direction').split(',')
-        x = int(x); y = int(y)
+        direction = request.POST.get('direction')
+        player = self.remove_player(key)
+        px, py = player['position'].split(',')
+        px = int(px); py = int(py)
+        x = 0; y = 0
+        if direction == 'left':
+            player['position'] = str(34 * 16) + ',' + str(py)
+            x = -1
+        if direction == 'right':
+            player['position'] = str(0) + ',' + str(py)
+            x = +1
         old_map = Map.objects.get(pk=self.pk)
         room_map, created = Map.objects.get_or_create(x=old_map.x+x, y=old_map.y+y)
-        player = self.get_player(key)
+        self.new_room_event(['player_leave_room', player])
         new_room = get_room(room_map.id)
         new_room.players.append(player)
         new_room.new_room_event(['new_player', player])
-        response = json_response({'change_room':room_map.serialized()})
+        # send all the other player
+        event_list = []
+        for player in new_room.players:
+            event_list.append(['new_player', player])
+        response = json_response({'change_room':room_map.serialized(), "events":event_list})
         response.set_cookie('room_id', new_room.pk)
         return response
 
@@ -135,7 +156,6 @@ def get_room(room_id):
 def room_dispacher(method):
     def _method(request):
         room_id = int(request.COOKIES.get('room_id', 1))
-        print room_id
         if rooms.has_key(room_id):
             room = rooms[room_id]
         else:

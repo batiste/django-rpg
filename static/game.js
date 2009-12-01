@@ -81,6 +81,7 @@ $(function() {
         this.height = h;
         this.blocs = [];
         this.choosen_bloc = [0, 0];
+        this.is_loading_room = false;
         this.forbidden = [
             [9, 1],[10, 2],[0, 9],[1, 9],[2, 9],[0, 10],[1, 10],
             [2, 10],[3, 10],[4, 10],[5, 10],[8, 9], [6, 8], [6, 10],
@@ -131,26 +132,49 @@ $(function() {
     };
 
     grid.prototype.bloc_from_player_pos = function(pos) {
+        if(this.is_loading_room)
+            return;
         var bloc_indexes = [
             Math.floor((pos[0]+12) / 16),
             Math.floor((pos[1]+32) / 16)
         ];
+        var direction = false;
         if(bloc_indexes[0] < 0) {
-            $.postJSON("/a/change_room", {'direction':"-1, 0"}, function(response) {
-                response = $.evalJSON(response);
-                var new_room = response["change_room"];
+            direction = "left";
+        }
+        if(bloc_indexes[0] > (grid1.width-1)) {
+            direction = "right";
+        };
+        if(direction) {
+            this.is_loading_room = true;
+            $.postJSON("/a/change_room", {'direction':direction}, function(response) {
+                for(var i=0; i < other_players.length; i++) {
+                    if(other_players[i]) {
+                        other_players[i].remove();
+                        delete other_players[i];
+                    }
+                };
                 other_players = [];
-                content_init = new_room["content"];
-                grid1.load_new_map(content_init);
-                me.position[0] = grid1.width * 16 - 12;
+                json = $.evalJSON(response);
+                var new_room = json["change_room"];
+                other_players = [];
+                var map_content = new_room["content"];
+                if(map_content)
+                    map_content = $.evalJSON(map_content);
+                grid1.load_new_map(map_content);
+                if(direction == "left")
+                    me.position[0] = (grid1.width-1) * 16;
+                if(direction == "right")
+                    me.position[0] = 0;
                 me.target_position = me.position;
                 me.move(me.position);
+                for(var i=0; i <json["events"].length; i++) {
+                    handle_event(json["events"][i]);
+                };
+                grid1.is_loading_room = false;
             });
             return;
         };
-        //var tile_pos = map.position();
-        //$('#select').css('left', bloc[0]*16 + tile_pos.left+'px');
-        //$('#select').css('top', bloc[1]*16 + tile_pos.top+'px');
         return this.get_bloc(bloc_indexes);
     };
 
@@ -166,8 +190,6 @@ $(function() {
                 bloc[0].css('background-position', tile_pos_css);
             };
         };
-        /*if(next_pos[0] < 0)
-            console.log("oki")*/
     };
 
     if(map_content)
@@ -261,6 +283,10 @@ $(function() {
 
     player.prototype.init_position = function() {
         this.move(this.position);
+    };
+
+    player.prototype.remove = function() {
+        this.element.remove();
     };
 
     player.prototype.update_target_position = function() {
@@ -363,7 +389,7 @@ $(function() {
     var other_players = [];
     function get_player(key) {
         for(var i=0; i < other_players.length; i++) {
-            if(other_players[i].key == key)
+            if(other_players[i] && other_players[i].key == key)
                 return other_players[i]
         }
         return false;
@@ -373,7 +399,8 @@ $(function() {
         me.update_target_position();
         me.move_to_target();
         for(var i=0; i <other_players.length; i++) {
-            other_players[i].move_to_target();
+            if(other_players[i])
+                other_players[i].move_to_target();
         };
     };
     setInterval(_players_move, 25);
@@ -381,7 +408,8 @@ $(function() {
     var _anim = function(){
         me.anim();
         for(var i=0; i <other_players.length; i++) {
-            other_players[i].anim();
+            if(other_players[i])
+                other_players[i].anim();
         };
     };
     me.anim_interval = setInterval(_anim, 120);
@@ -424,6 +452,18 @@ $(function() {
             if(item['new_message']) {
                 p.say(item['new_message'])
             }
+        };
+        if(event[0] == 'player_leave_room') {
+            var item = event[1];
+            if(item['key'] == personnal_key)
+                return;
+            for(var i=0; i < other_players.length; i++) {
+                if(other_players[i] && other_players[i].key == item['key']) {
+                    other_players[i].remove();
+                    delete other_players[i];
+                };
+            };
+            var p = get_player(item['key']);
         };
         if(event[0] == 'last_message') {
             if(event[1][0] == personnal_key)
