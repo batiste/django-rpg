@@ -6,10 +6,12 @@ from django.http import HttpResponse
 from gevent.event import Event
 from django.conf import settings
 
+from chat.models import Map
 
 class ChatRoom(object):
 
-    def __init__(self):
+    def __init__(self, room_id):
+        self.pk = room_id
         self.last_message = []
         self.players = []
         self.cache = []
@@ -20,9 +22,14 @@ class ChatRoom(object):
             self.event_buffer.append(None)
 
     def main(self, request):
+        room_map = Map.objects.get(pk=self.pk)
+        content = room_map.content.replace("\n", "")
         return render_to_response(
             'index.html',
-            {'MEDIA_URL': settings.MEDIA_URL}
+            {
+                'map_content':content,
+                'MEDIA_URL': settings.MEDIA_URL
+            }
         )
 
     def new_room_event(self, value):
@@ -82,7 +89,7 @@ class ChatRoom(object):
             return json_response([1])
         if cursor == False:
             cursor = self.event_cursor
-        # increment to be at the same level at the event
+        # increment to be at the same level that the last event
         cursor += 1
         if cursor >= len(self.event_buffer):
             cursor = 0
@@ -102,13 +109,47 @@ class ChatRoom(object):
 
         return json_response(event_list)
 
+    def change_room(self, request):
+        key = request.COOKIES['rpg_key']
+        x, y = request.POST.get('direction').split(',')
+        x = int(x); y = int(y)
+        old_map = Map.objects.get(pk=self.pk)
+        room_map, created = Map.objects.get_or_create(x=old_map.x+x, y=old_map.y+y)
+        player = self.get_player(key)
+        new_room = get_room(room_map.id)
+        new_room.players.append(player)
+        new_room.new_room_event(['new_player', player])
+        response = json_response({'change_room':room_map.serialized()})
+        response.set_cookie('room_id', new_room.pk)
+        return response
 
-room = ChatRoom()
-main = room.main
-message_new = room.message_new
-player_new = room.player_new
-player_update_position = room.player_update_position
-room_updates = room.room_updates
+rooms = {}
+def get_room(room_id):
+    if rooms.has_key(room_id):
+        room = rooms[room_id]
+    else:
+        room = ChatRoom(room_id)
+        rooms[room_id] = room
+    return room
+
+def room_dispacher(method):
+    def _method(request):
+        room_id = int(request.COOKIES.get('room_id', 1))
+        print room_id
+        if rooms.has_key(room_id):
+            room = rooms[room_id]
+        else:
+            room = ChatRoom(room_id)
+            rooms[room_id] = room
+        return getattr(room, method)(request)
+    return _method
+
+main = room_dispacher('main')
+message_new = room_dispacher('message_new')
+player_new = room_dispacher('player_new')
+player_update_position = room_dispacher('player_update_position')
+room_updates = room_dispacher('room_updates')
+change_room = room_dispacher('change_room')
 
 def create_message(from_, body):
     data = {'id': str(uuid.uuid4()), 'from': from_, 'body': body}

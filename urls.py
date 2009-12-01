@@ -6,7 +6,8 @@ urlpatterns = patterns('chat.views',
     ('^a/message/new$', 'message_new'),
     ('^a/room/updates$', 'room_updates'),
     ('^a/player/new$', 'player_new'),
-    ('^a/player/update_position$', 'player_update_position')
+    ('^a/player/update_position$', 'player_update_position'),
+    ('^a/change_room$', 'change_room')
 )
 
 urlpatterns += patterns('django.views.static',

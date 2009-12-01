@@ -72,7 +72,6 @@ $(function() {
 
     var map = $('#map');
     var tileset = $('#tileset');
-    var choosen_tile = [0, 0];
     var mouseDown = false;
 
     // GRID
@@ -81,6 +80,7 @@ $(function() {
         this.width = w;
         this.height = h;
         this.blocs = [];
+        this.choosen_bloc = [0, 0];
         this.forbidden = [
             [9, 1],[10, 2],[0, 9],[1, 9],[2, 9],[0, 10],[1, 10],
             [2, 10],[3, 10],[4, 10],[5, 10],[8, 9], [6, 8], [6, 10],
@@ -100,15 +100,11 @@ $(function() {
                     +'-'+ j +'" style="top:' + top_offest
                     + 'px;left:'+ left_offset + 'px;"></div>');
                 map.append(bloc);
-                if(blocs_init)
-                    line.push([bloc, blocs_init[i][j]]);
-                else
-                    line.push([bloc, [1, 1]]);
+                line.push([bloc, false]);
             };
             this.blocs.push(line);
         };
-        if(blocs_init)
-            this.load_new_map(blocs_init);
+        this.load_new_map(blocs_init);
     };
 
     grid.prototype.get_bloc = function(indexes) {
@@ -119,7 +115,8 @@ $(function() {
         //var bloc = $(e.target);
         if(bloc.hasClass('bloc')) {
             var b_string = bloc.attr('id').split('-');
-            this.blocs[parseInt(b_string[1])][parseInt(b_string[2])][1] = choosen_tile;
+            var tile_pos_css = (-this.choosen_bloc[0]*17-1)+'px ' + (-this.choosen_bloc[1]*17-1)+'px';
+            this.blocs[parseInt(b_string[1])][parseInt(b_string[2])][1] = this.choosen_bloc;
             bloc.css('background-position', tile_pos_css);
         };
     };
@@ -138,6 +135,19 @@ $(function() {
             Math.floor((pos[0]+12) / 16),
             Math.floor((pos[1]+32) / 16)
         ];
+        if(bloc_indexes[0] < 0) {
+            $.postJSON("/a/change_room", {'direction':"-1, 0"}, function(response) {
+                response = $.evalJSON(response);
+                var new_room = response["change_room"];
+                other_players = [];
+                content_init = new_room["content"];
+                grid1.load_new_map(content_init);
+                me.position[0] = grid1.width * 16 - 12;
+                me.target_position = me.position;
+                me.move(me.position);
+            });
+            return;
+        };
         //var tile_pos = map.position();
         //$('#select').css('left', bloc[0]*16 + tile_pos.left+'px');
         //$('#select').css('top', bloc[1]*16 + tile_pos.top+'px');
@@ -148,7 +158,10 @@ $(function() {
         for(var i=0; i < this.height; i++) {
             for(var j=0; j < this.width; j++) {
                 var bloc = this.blocs[i][j];
-                bloc[1] = blocs_init[i][j];
+                if(blocs_init)
+                    bloc[1] = blocs_init[i][j];
+                else
+                    bloc[1] = [1, 1];
                 var tile_pos_css = (-bloc[1][0]*17-1)+'px ' + (-bloc[1][1]*17-1)+'px';
                 bloc[0].css('background-position', tile_pos_css);
             };
@@ -157,23 +170,26 @@ $(function() {
             console.log("oki")*/
     };
 
+    if(map_content)
+        map_content = $.evalJSON(map_content);
+
     var grid1 = new grid(
-        35, 30, $.evalJSON($('#grid-serialized').val())
+        35, 30, map_content
     );
 
     tileset.click(function(e) {
         var tile_pos = tileset.position();
-        choosen_tile = [
+        grid1.choosen_bloc = [
                 Math.floor((e.clientX-tile_pos.left) / 17),
                 Math.floor((e.clientY-tile_pos.top) / 17)
             ];
-        tile_pos_css = (-choosen_tile[0]*17-1)+'px ' + (-choosen_tile[1]*17-1)+'px';
-        $('#select').css('left', choosen_tile[0]*17 + tile_pos.left+'px');
-        $('#select').css('top', choosen_tile[1]*17 + tile_pos.top+'px');
+        var tile_pos_css = (-grid1.choosen_bloc[0]*17-1)+'px ' + (-grid1.choosen_bloc[1]*17-1)+'px';
+        $('#select').css('left', grid1.choosen_bloc[0]*17 + tile_pos.left+'px');
+        $('#select').css('top', grid1.choosen_bloc[1]*17 + tile_pos.top+'px');
     });
 
     map.click(function(e) {
-        paint_bloc(e);
+        grid1.paint_bloc($(e.target));
         $('#grid-serialized').val($.toJSON(grid));
     });
 
@@ -188,7 +204,7 @@ $(function() {
 
     map.mousemove(function(e) {
         if(mouseDown) {
-            paint_bloc(e);
+            grid1.paint_bloc($(e.target));
             return false;
         };
     });
@@ -255,13 +271,9 @@ $(function() {
                 this.target_position[1] + parseInt(this.speed * vect[1])
             ];
             var bloc = grid1.bloc_from_player_pos(next_pos);
-            /*if(bloc === undefined) {
-                grid1.load_new_map(next_pos)
-            }*/
-            //console.log(grid1.is_bloc_walkable(bloc))
-            if(grid1.is_bloc_walkable(bloc)) {
+            if(bloc && grid1.is_bloc_walkable(bloc)) {
                 this.target_position = next_pos;
-            }
+            };
         };
     };
 
@@ -318,6 +330,8 @@ $(function() {
             );
         };
     };
+
+    // Start of the mundane things
 
     var personnal_key = false;
     var player_name = prompt("Choose your hero name");
