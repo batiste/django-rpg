@@ -17,6 +17,9 @@ body {
     border:1px #eee solid;
 }
 
+#room_data {
+    color:#fff;
+}
 
 #input {
     width:552px;

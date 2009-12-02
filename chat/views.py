@@ -27,6 +27,7 @@ class ChatRoom(object):
         return render_to_response(
             'index.html',
             {
+                'map':room_map,
                 'map_content':content,
                 'MEDIA_URL': settings.MEDIA_URL
             }
@@ -130,6 +131,12 @@ class ChatRoom(object):
         if direction == 'right':
             player['position'] = str(0) + ',' + str(py)
             x = +1
+        if direction == 'top':
+            player['position'] = str(px) + ',' + str(29 * 16)
+            y = -1
+        if direction == 'bottom':
+            player['position'] = str(px) + ',' + str(0)
+            y = +1
         old_map = Map.objects.get(pk=self.pk)
         room_map, created = Map.objects.get_or_create(x=old_map.x+x, y=old_map.y+y)
         self.new_room_event(['player_leave_room', player])

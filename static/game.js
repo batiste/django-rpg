@@ -145,6 +145,12 @@ $(function() {
         if(bloc_indexes[0] > (grid1.width-1)) {
             direction = "right";
         };
+        if(bloc_indexes[1] < 0) {
+            direction = "top";
+        }
+        if(bloc_indexes[1] > (grid1.height-1)) {
+            direction = "bottom";
+        }
         if(direction) {
             this.is_loading_room = true;
             $.postJSON("/a/change_room", {'direction':direction}, function(response) {
@@ -166,11 +172,16 @@ $(function() {
                     me.position[0] = (grid1.width-1) * 16;
                 if(direction == "right")
                     me.position[0] = 0;
+                if(direction == "top")
+                    me.position[1] = (grid1.height-2) * 16;
+                if(direction == "bottom")
+                    me.position[1] = 0;
                 me.target_position = me.position;
                 me.move(me.position);
                 for(var i=0; i <json["events"].length; i++) {
                     handle_event(json["events"][i]);
                 };
+                $('#room_data').text(new_room['x']+', '+new_room['y']);
                 grid1.is_loading_room = false;
             });
             return;
