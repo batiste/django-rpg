@@ -7,8 +7,14 @@
   </head>
   <body>
     <div id="main">
-        <p>(<span id="room_data">{{ map.x }}, {{ map.y }}</span>)</p>
-        <img src="{{MEDIA_URL}}tileset.png" id="tileset">
+        <p id="room_data"><span id="room_name">{{ map.name }}</span> (<span id="room_x">{{ map.x }}</span>, <span id="room_y">{{ map.y }}</span></span>)</p>
+        <div id="tileset-container">
+            <img src="{{MEDIA_URL}}tileset.png" id="tileset">
+            <br>
+            <input id="save-map" type="submit" value="Save map">
+            <span id="save-message" style="display:none">Map saved.</span>
+        </div>
+        
         <div id="map"></div>
         <div id="input">
         <form action="/a/message/new" method="post" id="messageform">

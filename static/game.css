@@ -27,8 +27,9 @@ body {
     background:#666;
 }
 
-#tileset {
+#tileset-container {
     float:right;
+    color:#fff;
 }
 #grid-serialized {
     width:600px;

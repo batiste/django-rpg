@@ -1,5 +1,12 @@
 $(function() {
 
+    // evil
+    Array.prototype.remove = function(from, to) {
+        var rest = this.slice((to || from) + 1 || this.length);
+        this.length = from < 0 ? this.length + from : from;
+        return this.push.apply(this, rest);
+    };
+
     function getCookie(name) {
         var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
         return r ? r[1] : undefined;
@@ -7,7 +14,6 @@ $(function() {
 
     if (!window.console) window.console = {};
     if (!window.console.log) window.console.log = function() {};
-
 
     var event_cursor = false;
     // polling update
@@ -80,6 +86,7 @@ $(function() {
         this.width = w;
         this.height = h;
         this.blocs = [];
+        this.dom_blocs = [];
         this.choosen_bloc = [0, 0];
         this.is_loading_room = false;
         this.forbidden = [
@@ -93,32 +100,35 @@ $(function() {
         var top_offest = 0;
         var left_offset = 0;
         for(var i=0; i<this.height; i++) {
+            var dom_line = [];
             var line = [];
             var top_offest = i * 16;
             for(var j=0; j<this.width; j++) {
                 left_offset = j * 16;
-                var bloc = $('<div class="bloc" id="bloc-'+ i
+                var dom_bloc = $('<div class="bloc" id="bloc-'+ i
                     +'-'+ j +'" style="top:' + top_offest
                     + 'px;left:'+ left_offset + 'px;"></div>');
-                map.append(bloc);
-                line.push([bloc, false]);
+                map.append(dom_bloc);
+                dom_line.push(dom_bloc);
+                line.push(false);
             };
+            this.dom_blocs.push(dom_line);
             this.blocs.push(line);
         };
         this.load_new_map(blocs_init);
     };
 
     grid.prototype.get_bloc = function(indexes) {
-        return this.blocs[indexes[1]][indexes[0]][1];
+        return this.blocs[indexes[1]][indexes[0]];
     };
 
-    grid.prototype.paint_bloc = function(bloc) {
+    grid.prototype.paint_bloc = function(dom_bloc) {
         //var bloc = $(e.target);
-        if(bloc.hasClass('bloc')) {
-            var b_string = bloc.attr('id').split('-');
+        if(dom_bloc.hasClass('bloc')) {
+            var b_string = dom_bloc.attr('id').split('-');
             var tile_pos_css = (-this.choosen_bloc[0]*17-1)+'px ' + (-this.choosen_bloc[1]*17-1)+'px';
-            this.blocs[parseInt(b_string[1])][parseInt(b_string[2])][1] = this.choosen_bloc;
-            bloc.css('background-position', tile_pos_css);
+            this.blocs[parseInt(b_string[1])][parseInt(b_string[2])] = this.choosen_bloc;
+            dom_bloc.css('background-position', tile_pos_css);
         };
     };
 
@@ -153,17 +163,18 @@ $(function() {
         }
         if(direction) {
             this.is_loading_room = true;
-            $.postJSON("/a/change_room", {'direction':direction}, function(response) {
-                for(var i=0; i < other_players.length; i++) {
-                    if(other_players[i]) {
-                        other_players[i].remove();
-                        delete other_players[i];
-                    }
+            $.postJSON("/a/change_room", {'direction':direction}, function change_room(response) {
+                var others_number = other_players.length - 1;
+                while(others_number >= 0) {
+                    if(other_players[0]) {
+                        other_players[0].remove();
+                    };
+                    other_players.remove(0);
+                    others_number = others_number - 1;
                 };
                 other_players = [];
                 json = $.evalJSON(response);
                 var new_room = json["change_room"];
-                other_players = [];
                 var map_content = new_room["content"];
                 if(map_content)
                     map_content = $.evalJSON(map_content);
@@ -181,7 +192,9 @@ $(function() {
                 for(var i=0; i <json["events"].length; i++) {
                     handle_event(json["events"][i]);
                 };
-                $('#room_data').text(new_room['x']+', '+new_room['y']);
+                $('#room_x').text(new_room['x']);
+                $('#room_y').text(new_room['y']);
+                $('#room_name').text(new_room['name']);
                 grid1.is_loading_room = false;
             });
             return;
@@ -192,13 +205,14 @@ $(function() {
     grid.prototype.load_new_map = function(blocs_init) {
         for(var i=0; i < this.height; i++) {
             for(var j=0; j < this.width; j++) {
-                var bloc = this.blocs[i][j];
+                var dom_bloc = this.dom_blocs[i][j];
                 if(blocs_init)
-                    bloc[1] = blocs_init[i][j];
+                    var bloc = blocs_init[i][j];
                 else
-                    bloc[1] = [1, 1];
-                var tile_pos_css = (-bloc[1][0]*17-1)+'px ' + (-bloc[1][1]*17-1)+'px';
-                bloc[0].css('background-position', tile_pos_css);
+                    var bloc = [1, 1];
+                this.blocs[i][j] = bloc;
+                var tile_pos_css = (-bloc[0]*17-1)+'px ' + (-bloc[1]*17-1)+'px';
+                dom_bloc.css('background-position', tile_pos_css);
             };
         };
     };
@@ -232,7 +246,7 @@ $(function() {
 
     map.mouseup(function(e) {
         mouseDown = false;
-        $('#grid-serialized').val($.toJSON(grid));
+        //$('#grid-serialized').val($.toJSON(grid));
     });
 
     map.mousemove(function(e) {
@@ -307,6 +321,7 @@ $(function() {
                 this.target_position[0] + parseInt(this.speed * vect[0]),
                 this.target_position[1] + parseInt(this.speed * vect[1])
             ];
+
             var bloc = grid1.bloc_from_player_pos(next_pos);
             if(bloc && grid1.is_bloc_walkable(bloc)) {
                 this.target_position = next_pos;
@@ -416,18 +431,23 @@ $(function() {
     };
     setInterval(_players_move, 25);
 
-    var _anim = function(){
-        me.anim();
-        for(var i=0; i <other_players.length; i++) {
-            if(other_players[i])
-                other_players[i].anim();
+    var _anim = function() {
+        if(!grid1.is_loading_room) {
+            me.anim();
+            for(var i=0; i <other_players.length; i++) {
+                if(other_players[i])
+                    other_players[i].anim();
+            };
         };
     };
     me.anim_interval = setInterval(_anim, 120);
 
     // send the new position to the server
-    var _player_send = function(){ me.send_position(); }
-    setInterval(_player_send, 1000);
+    var _player_send_position = function() {
+        if(!grid1.is_loading_room)
+            me.send_position();
+    };
+    setInterval(_player_send_position, 1000);
 
     $.receive_data = function(json) {
         for(var i=0; i <json.length; i++) {
@@ -471,7 +491,7 @@ $(function() {
             for(var i=0; i < other_players.length; i++) {
                 if(other_players[i] && other_players[i].key == item['key']) {
                     other_players[i].remove();
-                    delete other_players[i];
+                    other_players.remove(i);
                 };
             };
             var p = get_player(item['key']);
@@ -547,9 +567,9 @@ $(function() {
     };
 
     var keyboard_events = $('#message')
-    /*$('body').click(function(){
+    $('body').click(function(){
         keyboard_events.focus();
-    });*/
+    });
     keyboard_events.focus();
 
     keyboard_events.keydown(function(e) {
@@ -557,12 +577,20 @@ $(function() {
         //reset_cycle();
         player.walking = true;
     });
-    keyboard_events.keyup(function(e){
+    keyboard_events.keyup(function(e) {
         update_keyboard(e, 0);
-        //reset_cycle();
         if( !keyboard["up"] && !keyboard["left"] && !keyboard["right"] && !keyboard["down"] )
             player.walking=false;
     });
+
+    $('#save-map').click(function() {
+        var content = $.toJSON(grid1.blocs);
+        $.postJSON("/a/save_map", {'content':content}, function change_room(response) {
+            $('#save-message').show().fadeOut("slow");
+        });
+    })
+
+    
     /*keyboard_events.blur(function(e) {
         keyboard = {'up':0, 'left':0, 'right':0, 'down':0};
         keyboard_events.focus();

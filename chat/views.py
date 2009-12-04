@@ -55,6 +55,13 @@ class ChatRoom(object):
                 return p
         return None
 
+    def save_map(self, request):
+        room_map = Map.objects.get(pk=self.pk)
+        room_map.content = request.POST['content']
+        room_map.save()
+        self.new_room_event({'update_map':room_map.serialized()})
+        return json_response([1])
+
     def player_new(self, request):
         key = request.COOKIES.get('rpg_key', False)
         new_player = self.get_player(key)
@@ -177,6 +184,7 @@ player_new = room_dispacher('player_new')
 player_update_position = room_dispacher('player_update_position')
 room_updates = room_dispacher('room_updates')
 change_room = room_dispacher('change_room')
+save_map = room_dispacher('save_map')
 
 def create_message(from_, body):
     data = {'id': str(uuid.uuid4()), 'from': from_, 'body': body}
