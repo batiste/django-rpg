@@ -37,17 +37,11 @@ $(function() {
         },
 
         onSuccess: function(response) {
-            //try {
-                var mapdata = $.evalJSON(response);
-                $.receive_data(mapdata)
-                //var pos = mapdata['players'][0]['position'].split(',');
-                //$.player_target_position[0] = parseInt(pos[0])
-                //$.player_target_position[1] = parseInt(pos[1])
-
-            //} catch (e) {
-            //    updater.onError();
-            //    return;
-            //}
+            var json = $.evalJSON(response);
+            for(var i=0; i <json.length; i++) {
+                handle_event(json[i]);
+            };
+    
             updater.errorSleepTime = 500;
             window.setTimeout(updater.poll, 0);
         },
@@ -237,7 +231,6 @@ $(function() {
 
     map.click(function(e) {
         grid1.paint_bloc($(e.target));
-        $('#grid-serialized').val($.toJSON(grid));
     });
 
     map.mousedown(function(e) {
@@ -372,11 +365,13 @@ $(function() {
 
     player.prototype.send_position = function () {
         if(this.last_sent_position[0] != this.target_position[0]
-            || this.last_sent_position[1] != this.target_position[1]) {
-                this.last_sent_position[0] = this.target_position[0];
-                this.last_sent_position[1] = this.target_position[1];
-                $.postJSON("/a/player/update_position", {
-                    'body':this.target_position[0]+','+this.target_position[1]
+            || this.last_sent_position[1] != this.target_position[1])
+        {
+            var pos = $.toJSON(this.target_position)
+            this.last_sent_position[0] = this.target_position[0];
+            this.last_sent_position[1] = this.target_position[1];
+            $.postJSON("/a/player/update_position", {
+                    'body':pos
                 },
                 function(response) {}
             );
@@ -449,20 +444,12 @@ $(function() {
     };
     setInterval(_player_send_position, 1000);
 
-    $.receive_data = function(json) {
-        for(var i=0; i <json.length; i++) {
-            handle_event(json[i]);
-        };
-    };
-
     function handle_event(event) {
         if(event[0] == 'update_player_position') {
             var p = get_player(event[1][0]);
             if(event[1][0] == personnal_key)
                 return;
-            var _pos = event[1][1].split(',');
-            var pos = [parseInt(_pos[0]), parseInt(_pos[1])];
-            p.target_position = pos;
+            p.target_position = event[1][1];
         }
         if(event[0] == 'new_player') {
             var item = event[1];
