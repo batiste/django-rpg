@@ -380,21 +380,6 @@ $(function() {
 
     // Start of the mundane things
 
-    var personnal_key = false;
-    var player_name = prompt("Choose your hero name");
-    $.postJSON("/a/player/new", {'body':player_name}, function(response) {
-        response = $.evalJSON(response);
-        personnal_key = response["you"]["key"];
-        for(var i=0; i < response["events"].length; i++) {
-            handle_event(response["events"][i]);
-        };
-    });
-
-    var me = new player([30, 100], personnal_key, player_name);
-    me.init_position();
-    // start polling events
-    updater.poll();
-
     $("#messageform").submit(function(e) {
         e.preventDefault();
         var message = $('#message');
@@ -406,8 +391,6 @@ $(function() {
         return false;
     });
 
-    // animation
-    var other_players = [];
     function get_player(key) {
         for(var i=0; i < other_players.length; i++) {
             if(other_players[i] && other_players[i].key == key)
@@ -416,33 +399,62 @@ $(function() {
         return false;
     }
 
-    var _players_move = function() {
-        me.update_target_position();
-        me.move_to_target();
-        for(var i=0; i <other_players.length; i++) {
-            if(other_players[i])
-                other_players[i].move_to_target();
-        };
-    };
-    setInterval(_players_move, 25);
+    var me = false;
+    var other_players = [];
 
-    var _anim = function() {
-        if(!grid1.is_loading_room) {
-            me.anim();
+    function bootstrap() {
+        
+        me = new player(window.player_position, window.personnal_key, window.player_name);
+        me.init_position();
+        // start polling events
+        updater.poll();
+
+        // animation
+
+        var _players_move = function() {
+            me.update_target_position();
+            me.move_to_target();
             for(var i=0; i <other_players.length; i++) {
                 if(other_players[i])
-                    other_players[i].anim();
+                    other_players[i].move_to_target();
             };
         };
-    };
-    me.anim_interval = setInterval(_anim, 120);
+        setInterval(_players_move, 25);
 
-    // send the new position to the server
-    var _player_send_position = function() {
-        if(!grid1.is_loading_room)
-            me.send_position();
+        var _anim = function() {
+            if(!grid1.is_loading_room) {
+                me.anim();
+                for(var i=0; i <other_players.length; i++) {
+                    if(other_players[i])
+                        other_players[i].anim();
+                };
+            };
+        };
+        me.anim_interval = setInterval(_anim, 120);
+
+        // send the new position to the server
+        var _player_send_position = function() {
+            if(!grid1.is_loading_room)
+                me.send_position();
+        };
+        setInterval(_player_send_position, 1000);
     };
-    setInterval(_player_send_position, 1000);
+
+    if(!window.player_position) {
+        var player_name = prompt("Choose your hero name");
+        $.postJSON("/a/player/new", {'body':player_name}, function(response) {
+            response = $.evalJSON(response);
+            window.personnal_key = response["you"]["key"];
+            window.player_position = response["you"]["position"];
+            window.player_name = response["you"]["name"];
+            for(var i=0; i < response["events"].length; i++) {
+                handle_event(response["events"][i]);
+            };
+            bootstrap();
+        });
+    } else {
+        bootstrap();
+    }
 
     function handle_event(event) {
         if(event[0] == 'update_player_position') {
@@ -455,9 +467,8 @@ $(function() {
             var item = event[1];
             if(item['key'] == personnal_key)
                 return;
-            if(item['position']){
-                var _pos = item['position'].split(',');
-                var pos = [parseInt(_pos[0]), parseInt(_pos[1])];
+            if(item['position']) {
+                var pos = item['position'];
             } else {
                 var pos = [50, 60];
             }

@@ -26,7 +26,6 @@ class ChatRoom(object):
         content = room_map.content.replace("\n", "")
         key = request.COOKIES.get('rpg_key', False)
         player = self.get_player(key)
-        print player
         return render_to_response(
             'index.html',
             {
@@ -72,7 +71,7 @@ class ChatRoom(object):
         if  not new_player:
             key = str(uuid.uuid4())
             name = request.POST['body']
-            new_player = {'name':name, 'key':key}
+            new_player = {'name':name, 'key':key, 'position':[20,20]}
         event_list = []
         # send all the other player
         for player in self.players:
