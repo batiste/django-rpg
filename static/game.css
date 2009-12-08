@@ -4,6 +4,10 @@
     margin:0 auto;
 }
 
+canvas {
+    position:absolute;
+}
+
 body {
     font-size:12px;
     font-family:verdana, arial, sans-serif;

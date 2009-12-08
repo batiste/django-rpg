@@ -495,6 +495,16 @@ $(function() {
         if(event[0] == 'update_cursor') {
             event_cursor = event[1];
         };
+        if(event[0] == 'effect') {
+            var item = event[1];
+            if(item[0] == personnal_key)
+                return;
+            var p = get_player(item[0]);
+            if(p) {
+                animation = new Animation(item[0], p.position[0], p.position[1]);
+                animation.anim();
+            }
+        };
     }
 
     // keyboard stuff
@@ -579,5 +589,13 @@ $(function() {
             $('#save-message').show().fadeOut("slow");
         });
     })
+
+    $('#magic').click(function() {
+        game.postJSON("/a/effect", {'type':'normal'}, function effect(response) {
+            animation = new Animation(personnal_key, me.position[0], me.position[1]);
+            animation.anim();
+        });
+
+    });
 
 });

@@ -22,11 +22,11 @@
             <input name="body" id="message" autocomplete="off" style="width:480px"/>
             <input type="submit" value="Say" style="float:right" />
         </form>
+        <input type="button" value="Magic" id="magic">
         </div>
         
         <div id="select"></div>
     </div>
-    <canvas id="canvas" style="width:200px;height:200px"></canvas>
     <script>
         var map_content = "{{ map_content }}";
         {% if player %}
@@ -38,7 +38,7 @@
     <script src="{{MEDIA_URL}}jquery.js" type="text/javascript"></script>
     <script src="{{MEDIA_URL}}jquery.json-2.2.js"></script>
     <script src="{{MEDIA_URL}}common.js" type="text/javascript"></script>
-    <script src="{{MEDIA_URL}}game.js" type="text/javascript"></script>
     <script src="{{MEDIA_URL}}effects.js" type="text/javascript"></script>
+    <script src="{{MEDIA_URL}}game.js" type="text/javascript"></script>
   </body>
 </html>

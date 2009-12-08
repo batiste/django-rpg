@@ -127,6 +127,12 @@ class ChatRoom(object):
 
         return json_response(event_list)
 
+    def effect(self, request):
+        key = request.COOKIES['rpg_key']
+        effect_type = request.POST.get('type')
+        self.new_room_event(['effect', [key, effect_type]])
+        return json_response([1])
+        
     def change_room(self, request):
         key = request.COOKIES['rpg_key']
         direction = request.POST.get('direction')
@@ -185,6 +191,7 @@ player_update_position = room_dispacher('player_update_position')
 room_updates = room_dispacher('room_updates')
 change_room = room_dispacher('change_room')
 save_map = room_dispacher('save_map')
+effect = room_dispacher('effect')
 
 def create_message(from_, body):
     data = {'id': str(uuid.uuid4()), 'from': from_, 'body': body}
