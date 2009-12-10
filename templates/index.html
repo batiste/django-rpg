@@ -9,11 +9,13 @@
     <div id="main">
         <p id="room_data"><span id="room_name">{{ map.name }}</span>
             (<span id="room_x">{{ map.x }}</span>, <span id="room_y">{{ map.y }}</span></span>)</p>
-        <div id="tileset-container">
+        <div id="right-container">
             <img src="{{MEDIA_URL}}tileset.png" id="tileset">
             <br>
             <input id="save-map" type="submit" value="Save map">
             <span id="save-message" style="display:none">Map saved.</span>
+
+            <ul id="chat-log"></ul>
         </div>
         
         <div id="map"></div>
@@ -24,7 +26,6 @@
         </form>
         <input type="button" value="Magic" id="magic">
         </div>
-        
         <div id="select"></div>
     </div>
     <script>

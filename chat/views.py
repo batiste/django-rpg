@@ -5,6 +5,7 @@ from django.template.loader import render_to_string
 from django.http import HttpResponse
 from gevent.event import Event
 from django.conf import settings
+from django.utils.html import escape
 
 from chat.models import Map
 
@@ -91,7 +92,7 @@ class ChatRoom(object):
 
     def message_new(self, request):
         key = request.COOKIES['rpg_key']
-        msg = request.POST['body']
+        msg = escape(request.POST['body'])
         player = self.get_player(key)
         player['last_message'] = msg
         self.new_room_event(['last_message', [key, msg]])

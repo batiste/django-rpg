@@ -259,7 +259,11 @@ $(function() {
     Player.prototype.say = function(message) {
         clearTimeout(this.message_timeout);
         var el = this.message_element;
-        this.message_element.text(message);
+        var chat_log_item = $('<li></li>');
+        chat_log_item.html('<span>' + this.pname + ':</span> ' + message);
+        $('#chat-log').append(chat_log_item)
+        $('#chat-log').scrollTop(1000)
+        this.message_element.html(message);
         this.message_element.slideDown("slow");
         var _hide_message = function(){el.slideUp("slow");}
         this.message_timeout = setTimeout(_hide_message, 12000);

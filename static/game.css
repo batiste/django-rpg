@@ -1,6 +1,6 @@
 
 #main {
-    width:760px;
+    width:770px;
     margin:0 auto;
 }
 
@@ -31,10 +31,30 @@ body {
     background:#666;
 }
 
-#tileset-container {
+#right-container {
+    width:188px;
     float:right;
     color:#fff;
 }
+
+#chat-log {
+    border:1px #666 solid;
+    padding:10px;
+    list-style:none;
+    height:270px;
+    overflow:auto;
+}
+
+#chat-log li {
+    padding:0;
+    margin:0;
+    color:#eee;
+}
+
+#chat-log li span{
+    color:#aaa;
+}
+
 #grid-serialized {
     width:600px;
     height:100px;
