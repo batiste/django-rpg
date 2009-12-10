@@ -4,10 +4,12 @@ from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 from gevent.event import Event
+from gevent import spawn_later
 from django.conf import settings
 from django.utils.html import escape
 
 from chat.models import Map
+import random
 
 class ChatRoom(object):
 
@@ -15,12 +17,27 @@ class ChatRoom(object):
         self.pk = room_id
         self.last_message = []
         self.players = []
+        spawn_later(15, self.move_pnj)
         self.cache = []
         self.room_event = Event()
         self.event_cursor = 0
         self.event_buffer = []
         for v in range(0, 9):
             self.event_buffer.append(None)
+
+        npc = {'name':'The old master', 'key':'old', 'position':[100,200]}
+        self.players.append(npc)
+        self.new_room_event(['new_player', npc])
+        self.new_room_event(['last_message', ['old', """
+        You are the first to visit this map. Modify it and save your work!"""]])
+
+    def move_pnj(self):
+        npc = self.get_player('old')
+        if npc:
+            npc['position'][1] += random.randint(-50, 50)
+            npc['position'][0] += random.randint(-50, 50)
+            self.new_room_event(['update_player_position', ['old', npc['position']]])
+            spawn_later(15, self.move_pnj)
 
     def main(self, request):
         room_map = Map.objects.get(pk=self.pk)
@@ -52,7 +69,6 @@ class ChatRoom(object):
         return None
 
     def remove_player(self, key):
-        i = 0
         for p in self.players:
             if p['key'] == key:
                 self.players.remove(p)
@@ -69,9 +85,9 @@ class ChatRoom(object):
     def player_new(self, request):
         key = request.COOKIES.get('rpg_key', False)
         new_player = self.get_player(key)
-        if  not new_player:
+        if not new_player:
             key = str(uuid.uuid4())
-            name = request.POST['body']
+            name = escape(request.POST['body'])
             new_player = {'name':name, 'key':key, 'position':[20,20]}
         event_list = []
         # send all the other player
@@ -137,7 +153,7 @@ class ChatRoom(object):
     def change_room(self, request):
         key = request.COOKIES['rpg_key']
         direction = request.POST.get('direction')
-        player = self.remove_player(key)
+        player = self.get_player(key)
         x = 0; y = 0
         if direction == 'left':
             player['position'][0] = 34 * 16
@@ -157,6 +173,7 @@ class ChatRoom(object):
         new_room = get_room(room_map.id)
         new_room.players.append(player)
         new_room.new_room_event(['new_player', player])
+        self.remove_player(key)
         # send all the other player
         event_list = []
         for player in new_room.players:

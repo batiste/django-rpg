@@ -143,15 +143,15 @@ $(function() {
         if(direction) {
             this.is_loading_room = true;
             game.postJSON("/a/change_room", {'direction':direction}, function change_room(response) {
-                var others_number = other_players.length - 1;
+                var others_number = game.other_players.length - 1;
                 while(others_number >= 0) {
-                    if(other_players[0]) {
-                        other_players[0].remove();
+                    if(game.other_players[0]) {
+                        game.other_players[0].remove();
                     };
-                    other_players.remove(0);
+                    game.other_players.remove(0);
                     others_number = others_number - 1;
                 };
-                other_players = [];
+                game.other_players = [];
                 json = $.evalJSON(response);
                 var new_room = json["change_room"];
                 var map_content = new_room["content"];
@@ -333,7 +333,7 @@ $(function() {
             this.target_position[1] - this.position[1]
         ];
         var norm = norm_vector(vect);
-        if(norm < 1) {
+        if(norm <= 1) {
             this.position[0] = this.target_position[0];
             this.position[1] = this.target_position[1];
             this.move(this.position);
@@ -388,15 +388,15 @@ $(function() {
     });
 
     function get_player(key) {
-        for(var i=0; i < other_players.length; i++) {
-            if(other_players[i] && other_players[i].key == key)
-                return other_players[i]
+        for(var i=0; i < game.other_players.length; i++) {
+            if(game.other_players[i] && game.other_players[i].key == key)
+                return game.other_players[i]
         }
         return false;
     }
 
     var me = false;
-    var other_players = [];
+    game.other_players = [];
 
     function bootstrap() {
         
@@ -410,9 +410,9 @@ $(function() {
         var _players_move = function() {
             me.update_target_position();
             me.move_to_target();
-            for(var i=0; i <other_players.length; i++) {
-                if(other_players[i])
-                    other_players[i].move_to_target();
+            for(var i=0; i <game.other_players.length; i++) {
+                if(game.other_players[i])
+                    game.other_players[i].move_to_target();
             };
         };
         setInterval(_players_move, 16);
@@ -420,9 +420,9 @@ $(function() {
         var _anim = function() {
             if(!grid1.is_loading_room) {
                 me.anim();
-                for(var i=0; i <other_players.length; i++) {
-                    if(other_players[i])
-                        other_players[i].anim();
+                for(var i=0; i <game.other_players.length; i++) {
+                    if(game.other_players[i])
+                        game.other_players[i].anim();
                 };
             };
         };
@@ -471,7 +471,7 @@ $(function() {
             var p = get_player(item['key']);
             if(p === false) {
                 p = new Player([pos[0], pos[1]], item['key'], item['name']);
-                other_players.push(p);
+                game.other_players.push(p);
             }
             p.target_position = [pos[0], pos[1]];
             if(item['new_message']) {
@@ -482,10 +482,10 @@ $(function() {
             var item = event[1];
             if(item['key'] == personnal_key)
                 return;
-            for(var i=0; i < other_players.length; i++) {
-                if(other_players[i] && other_players[i].key == item['key']) {
-                    other_players[i].remove();
-                    other_players.remove(i);
+            for(var i=0; i < game.other_players.length; i++) {
+                if(game.other_players[i] && game.other_players[i].key == item['key']) {
+                    game.other_players[i].remove();
+                    game.other_players.remove(i);
                 };
             };
             var p = get_player(item['key']);

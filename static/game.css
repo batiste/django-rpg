@@ -38,11 +38,12 @@ body {
 }
 
 #chat-log {
-    border:1px #666 solid;
+    border:1px #444 solid;
     padding:10px;
     list-style:none;
     height:270px;
     overflow:auto;
+    background:#222;
 }
 
 #chat-log li {
