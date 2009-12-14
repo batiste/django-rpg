@@ -1,0 +1,33 @@
+<html>
+<body>
+
+<img src="walk2.png">
+
+<script src="character.js" type="text/javascript"></script>
+
+<canvas id="myCanvasElt" width=288 height=32></canvas>
+
+<script>
+
+var canvas = document.getElementById('myCanvasElt');
+var ctx = canvas.getContext('2d');
+var canvasData = ctx.createImageData(canvas.width, canvas.height);
+
+console.log(character_map.length)
+console.log(character_map[0].length)
+for (var x = 0; x < character_map.length; x++) {
+    for (var y = 0; y < character_map[x].length; y++) {
+        var color = character_map[x][y];
+        // Index of the pixel in the array
+        var idx = ((x*4) + (y * canvas.width * 4));
+        // Update the values of the pixel;
+        canvasData.data[idx + 0] = color[0];
+        canvasData.data[idx + 1] = color[1];
+        canvasData.data[idx + 2] = color[2];
+        canvasData.data[idx + 3] = color[3];
+    }
+}
+
+ctx.putImageData(canvasData, 0, 0);
+
+</script>
