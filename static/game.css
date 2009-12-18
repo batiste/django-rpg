@@ -82,6 +82,15 @@ body {
     background:url(walk2.png) top left no-repeat;
     width:24px;
     height:32px;
+    /*border:1px red solid;*/
+}
+
+#indic {
+    position:absolute;
+    width:16px;
+    height:16px;
+    background:black;
+    z-index:1000;
 }
 
 .player .text {

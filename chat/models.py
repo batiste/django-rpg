@@ -10,11 +10,11 @@ class Map(models.Model):
     y = models.IntegerField()
 
     forbidden = [
-            [9, 1],[10, 2],[0, 9],[1, 9],[2, 9],[0, 10],[1, 10],
-            [2, 10],[3, 10],[4, 10],[5, 10],[8, 9], [6, 8], [6, 10],
-            [7, 9],[7, 8],[7, 10],[6, 7], [6, 9],[9, 7],[10, 7],
-            [8, 8], [8 ,10], [9, 8],
-            [10, 8],[9, 9],[9, 10],[10, 10]
+        [9, 1],[10, 2],[0, 9],[1, 9],[2, 9],[0, 10],[1, 10],
+        [2, 10],[3, 10],[4, 10],[5, 10],[8, 9], [6, 8], [6, 10],
+        [7, 9],[7, 8],[7, 10],[6, 7], [6, 9],[9, 7],[10, 7],
+        [8, 8], [8 ,10], [9, 8],
+        [10, 8],[9, 9],[9, 10],[10, 10]
     ]
 
     content = models.TextField()
@@ -28,6 +28,8 @@ class Map(models.Model):
             "content":self.content.replace("\n", "")
         }
 
+    # the grid is presented by vertical line first
+    # then by horizontal line, eg: _ground[y][x]
     _ground = None
 
     def get_ground(self):
@@ -46,15 +48,17 @@ class Map(models.Model):
     def is_safe_position(self, pos):
         if self.ground is None:
             return False
-        x = int(math.floor((pos[0]) / 16))
-        y = int(math.floor((pos[1]) / 16))
+        # find the block
+        x = int(round(pos[0] / 16.))
+        y = int(round(pos[1] / 16.))
         if x <= 0 or y <= 0:
             return False
-        if x >= 16 * len(self.ground) -1:
+        if x >= len(self.ground):
             return False
-        if y >= 16 * len(self.ground[0]):
+        if y >= len(self.ground[0]):
             return False
-        block = self.ground[x][y]
+        block = self.ground[y][x]
+        print x,y, block, block in self.forbidden
         if block in self.forbidden:
             return False
         return True

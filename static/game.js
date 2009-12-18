@@ -94,6 +94,7 @@ $(function() {
             this.dom_blocs.push(dom_line);
             this.blocs.push(line);
         };
+        //map.append($('<div id="indic"></div>'));
         this.load_new_map(blocs_init);
     };
 
@@ -284,6 +285,8 @@ $(function() {
     };
 
     Player.prototype.move = function(pos) {
+        /*$('#indic')[0].style.left = (pos[0])+'px';
+        $('#indic')[0].style.top = (pos[1])+'px';*/
         this.element[0].style.left = (pos[0] - 12)+'px';
         this.element[0].style.top = (pos[1] - 32)+'px';
     };
