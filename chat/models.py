@@ -46,19 +46,17 @@ class Map(models.Model):
     ground = property(get_ground, set_ground)
 
     def is_safe_position(self, pos):
-        if self.ground is None:
-            return False
-        # find the block
         x = int(round(pos[0] / 16.))
         y = int(round(pos[1] / 16.))
+        if self.ground is None:
+            return False
         if x <= 0 or y <= 0:
             return False
-        if x >= len(self.ground):
+        if y >= len(self.ground):
             return False
-        if y >= len(self.ground[0]):
+        if x >= len(self.ground[0]):
             return False
         block = self.ground[y][x]
-        print x,y, block, block in self.forbidden
         if block in self.forbidden:
             return False
         return True

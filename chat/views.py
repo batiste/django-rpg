@@ -38,7 +38,8 @@ class ChatRoom(object):
             pos = [npc['position'][0], npc['position'][1]]
             pos[0] += random.randint(-50, 50)
             pos[1] += random.randint(-50, 50)
-            if self.room_map.is_safe_position(pos):
+            safe = self.room_map.is_safe_position(pos)
+            if safe:
                 npc['position'] = pos
                 self.new_room_event(['update_player_position',
                     ['old', npc['position']]])
