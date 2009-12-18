@@ -124,8 +124,8 @@ $(function() {
         if(this.is_loading_room)
             return;
         var bloc_indexes = [
-            Math.floor((pos[0]+12) / 16),
-            Math.floor((pos[1]+32) / 16)
+            Math.floor((pos[0]) / 16),
+            Math.floor((pos[1]) / 16)
         ];
         var direction = false;
         if(bloc_indexes[0] < 0) {
@@ -284,8 +284,8 @@ $(function() {
     };
 
     Player.prototype.move = function(pos) {
-        this.element[0].style.left = pos[0]+'px';
-        this.element[0].style.top = pos[1]+'px';
+        this.element[0].style.left = (pos[0] - 12)+'px';
+        this.element[0].style.top = (pos[1] - 32)+'px';
     };
 
     Player.prototype.init_position = function() {

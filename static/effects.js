@@ -10,8 +10,8 @@ function Animation(key, x, y) {
         map.appendChild(canvas);
     }
     
-    canvas.style.left = (x-35) + 'px';
-    canvas.style.top = (y-80) + 'px';
+    canvas.style.left = (x-45) + 'px';
+    canvas.style.top = (y-120) + 'px';
     this.ctx = document.getElementById(canvas.id).getContext('2d');
     this.ctx.canvas.width = 100;
     this.ctx.canvas.height = 100;

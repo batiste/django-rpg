@@ -15,9 +15,10 @@ class ChatRoom(object):
 
     def __init__(self, room_id):
         self.pk = room_id
+        self.room_map = Map.objects.get(pk=self.pk)
         self.last_message = []
         self.players = []
-        spawn_later(15, self.move_pnj)
+        spawn_later(5, self.move_pnj)
         self.cache = []
         self.room_event = Event()
         self.event_cursor = 0
@@ -34,21 +35,25 @@ class ChatRoom(object):
     def move_pnj(self):
         npc = self.get_player('old')
         if npc:
-            npc['position'][1] += random.randint(-50, 50)
-            npc['position'][0] += random.randint(-50, 50)
-            self.new_room_event(['update_player_position', ['old', npc['position']]])
-            spawn_later(15, self.move_pnj)
+            pos = [npc['position'][0], npc['position'][1]]
+            pos[0] += random.randint(-50, 50)
+            pos[1] += random.randint(-50, 50)
+            if self.room_map.is_safe_position(pos):
+                npc['position'] = pos
+                self.new_room_event(['update_player_position',
+                    ['old', npc['position']]])
+            spawn_later(5, self.move_pnj)
 
     def main(self, request):
-        room_map = Map.objects.get(pk=self.pk)
-        content = room_map.content.replace("\n", "")
+        
+        content = self.room_map.content.replace("\n", "")
         key = request.COOKIES.get('rpg_key', False)
         player = self.get_player(key)
         return render_to_response(
             'index.html',
             {
                 'player':player,
-                'map':room_map,
+                'map':self.room_map,
                 'map_content':content,
                 'MEDIA_URL': settings.MEDIA_URL
             }
@@ -76,10 +81,9 @@ class ChatRoom(object):
         return None
 
     def save_map(self, request):
-        room_map = Map.objects.get(pk=self.pk)
-        room_map.content = request.POST['content']
-        room_map.save()
-        self.new_room_event({'update_map':room_map.serialized()})
+        self.room_map.ground = request.POST['content']
+        self.room_map.save()
+        self.new_room_event({'update_map':self.room_map.serialized()})
         return json_response([1])
 
     def player_new(self, request):
@@ -103,11 +107,12 @@ class ChatRoom(object):
         key = request.COOKIES['rpg_key']
         player = self.get_player(key)
         pos = simplejson.loads(request.POST['body'])
-        player['position'] = pos
-        self.new_room_event([
-            'update_player_position',
-            [key, pos]
-        ])
+        if(pos):
+            player['position'] = pos
+            self.new_room_event([
+                'update_player_position',
+                [key, pos]
+            ])
         return json_response([1])
 
     def message_new(self, request):
