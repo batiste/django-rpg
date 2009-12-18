@@ -102,8 +102,12 @@ class ChatRoom(object):
     def player_update_position(self, request):
         key = request.COOKIES['rpg_key']
         player = self.get_player(key)
-        player['position'] = simplejson.loads(request.POST['body'])
-        self.new_room_event(['update_player_position', [key, player['position']]])
+        pos = simplejson.loads(request.POST['body'])
+        player['position'] = pos
+        self.new_room_event([
+            'update_player_position',
+            [key, pos]
+        ])
         return json_response([1])
 
     def message_new(self, request):
@@ -165,7 +169,7 @@ class ChatRoom(object):
             player['position'][1] = 28 * 16
             y = -1
         if direction == 'bottom':
-            player['position'] = 0
+            player['position'][1] = 0
             y = +1
         old_map = Map.objects.get(pk=self.pk)
         room_map, created = Map.objects.get_or_create(x=old_map.x+x, y=old_map.y+y)
