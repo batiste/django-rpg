@@ -8,8 +8,14 @@ from gevent import spawn_later
 from django.conf import settings
 from django.utils.html import escape
 
-from chat.models import Map
+from chat.models import Map, Player
 import random
+
+def pub_key(request):
+    return request.COOKIES.get('public_key', False)
+
+def priv_key(request):
+    return request.COOKIES.get('private_key', False)
 
 class ChatRoom(object):
 
@@ -26,12 +32,11 @@ class ChatRoom(object):
         for v in range(0, 9):
             self.event_buffer.append(None)
 
-        npc = {'name':'The old master', 'key':'old', 'position':[100,200]}
+        npc = Player(name='The old man', private_key=str(uuid.uuid4()),
+            public_key=str(uuid.uuid4()))
         self.players.append(npc)
-        self.new_room_event(['new_player', npc])
-        self.new_room_event(['last_message', ['old', """
-        You are the first to visit this map. Modify it and save your work!"""]])
-
+        self.new_room_event(['new_player', npc.pub()])
+        
     def move_pnj(self):
         npc = self.get_player('old')
         if npc:
@@ -46,9 +51,8 @@ class ChatRoom(object):
             spawn_later(5, self.move_pnj)
 
     def main(self, request):
-        
         content = self.room_map.content.replace("\n", "")
-        key = request.COOKIES.get('rpg_key', False)
+        key = priv_key(request)
         player = self.get_player(key)
         return render_to_response(
             'index.html',
@@ -70,13 +74,15 @@ class ChatRoom(object):
 
     def get_player(self, key):
         for p in self.players:
-            if p['key'] == key:
+            if p.public_key == key:
+                return p
+            if p.private_key == key:
                 return p
         return None
 
     def remove_player(self, key):
         for p in self.players:
-            if p['key'] == key:
+            if p.private_key == key:
                 self.players.remove(p)
                 return p
         return None
@@ -88,38 +94,45 @@ class ChatRoom(object):
         return json_response([1])
 
     def player_new(self, request):
-        key = request.COOKIES.get('rpg_key', False)
+        key = priv_key(request)
         new_player = self.get_player(key)
         if not new_player:
-            key = str(uuid.uuid4())
+            public_key = str(uuid.uuid4())
+            private_key = str(uuid.uuid4())
             name = escape(request.POST['body'])
-            new_player = {'name':name, 'key':key, 'position':[20,20]}
+            new_player = Player(
+                public_key=public_key,
+                private_key=private_key,
+                name=name,
+                position='[20,20]'
+            )
+            new_player.save()
         event_list = []
-        # send all the other player
+        # send all the other player to the new one
         for player in self.players:
-            event_list.append(['new_player', player])
+            event_list.append(['new_player', player.pub()])
         self.players.append(new_player)
-        self.new_room_event(['new_player', new_player])
-        response = json_response({'you':new_player, 'events':event_list})
-        response.set_cookie('rpg_key', key)
+        self.new_room_event(['new_player', new_player.pub()])
+        response = json_response({'you':new_player.priv(), 'events':event_list})
+        response.set_cookie('private_key', new_player.private_key)
         return response
 
     def player_update_position(self, request):
-        key = request.COOKIES['rpg_key']
+        key = priv_key(request)
         player = self.get_player(key)
-        pos = simplejson.loads(request.POST['body'])
+        pos = request.POST.get('body', False)
         if(pos):
-            player['position'] = pos
+            player.position = pos
             self.new_room_event([
                 'update_player_position',
-                [key, pos]
+                [player.public_key, player.position]
             ])
         return json_response([1])
 
     def message_new(self, request):
-        key = request.COOKIES['rpg_key']
-        msg = escape(request.POST['body'])
+        key = priv_key(request)
         player = self.get_player(key)
+        msg = escape(request.POST['body'])
         player['last_message'] = msg
         self.new_room_event(['last_message', [key, msg]])
         return json_response([1])
@@ -155,40 +168,46 @@ class ChatRoom(object):
         return json_response(event_list)
 
     def effect(self, request):
-        key = request.COOKIES['rpg_key']
+        key = priv_key(request)
+        player = self.get_player(key)
         effect_type = request.POST.get('type')
-        self.new_room_event(['effect', [key, effect_type]])
+        self.new_room_event(['effect', [player.public_key,
+            effect_type]])
         return json_response([1])
         
     def change_room(self, request):
-        key = request.COOKIES['rpg_key']
-        direction = request.POST.get('direction')
+        key = priv_key(request)
         player = self.get_player(key)
+        direction = request.POST.get('direction')
         x = 0; y = 0
+        pos = player.position
         if direction == 'left':
-            player['position'][0] = 34 * 16
+            pos[0] = 34 * 16
             x = -1
         if direction == 'right':
-            player['position'][0] = 0
+            pos[0] = 0
             x = +1
         if direction == 'top':
-            player['position'][1] = 28 * 16
+            pos[1] = 28 * 16
             y = -1
         if direction == 'bottom':
-            player['position'][1] = 0
+            pos[1] = 0
             y = +1
+        player.position = pos
         old_map = Map.objects.get(pk=self.pk)
-        room_map, created = Map.objects.get_or_create(x=old_map.x+x, y=old_map.y+y)
-        self.new_room_event(['player_leave_room', player])
+        room_map, created = Map.objects.get_or_create(x=old_map.x+x,
+            y=old_map.y+y)
+        self.new_room_event(['player_leave_room', player.pub()])
         new_room = get_room(room_map.id)
         new_room.players.append(player)
-        new_room.new_room_event(['new_player', player])
+        new_room.new_room_event(['new_player', player.pub()])
         self.remove_player(key)
         # send all the other player
         event_list = []
         for player in new_room.players:
-            event_list.append(['new_player', player])
-        response = json_response({'change_room':room_map.serialized(), "events":event_list})
+            event_list.append(['new_player', player.pub()])
+        response = json_response({'change_room':room_map.serialized(),
+            "events":event_list})
         response.set_cookie('room_id', new_room.pk)
         return response
 

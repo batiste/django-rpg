@@ -237,12 +237,13 @@ $(function() {
 
     // PLAYER
 
-    function Player(init_position, key, pname) {
+    function Player(init_position, public_key, pname, private_key) {
         this.position = [init_position[0], init_position[1]];
         this.last_sent_position = [init_position[0], init_position[1]];
         this.target_position = [init_position[0], init_position[1]];
         this.pname = pname;
-        this.key = key;
+        this.public_key = public_key;
+        this.private_key = private_key;
         this.walking = false;
         this.speed = 2;
         this.element = $('<div class="player">\
@@ -392,7 +393,7 @@ $(function() {
 
     function get_player(key) {
         for(var i=0; i < game.other_players.length; i++) {
-            if(game.other_players[i] && game.other_players[i].key == key)
+            if(game.other_players[i] && game.other_players[i].public_key == key)
                 return game.other_players[i]
         }
         return false;
@@ -403,7 +404,7 @@ $(function() {
 
     function bootstrap() {
         
-        me = new Player(window.player_position, window.personnal_key, window.player_name);
+        me = new Player(window.player_position, window.private_key, window.player_name);
         me.init_position();
         // start polling events
         updater.poll();
@@ -443,7 +444,8 @@ $(function() {
         var player_name = prompt("Choose your hero name");
         game.postJSON("/a/player/new", {'body':player_name}, function(response) {
             response = $.evalJSON(response);
-            window.personnal_key = response["you"]["key"];
+            window.private_key = response["you"]["private_key"];
+            window.public_key = response["you"]["key"];
             window.player_position = response["you"]["position"];
             window.player_name = response["you"]["name"];
             for(var i=0; i < response["events"].length; i++) {
@@ -458,13 +460,13 @@ $(function() {
     function handle_event(event) {
         if(event[0] == 'update_player_position') {
             var p = get_player(event[1][0]);
-            if(event[1][0] == personnal_key)
+            if(event[1][0] == window.public_key)
                 return;
             p.target_position = event[1][1];
         }
         if(event[0] == 'new_player') {
             var item = event[1];
-            if(item['key'] == personnal_key)
+            if(item['key'] == window.public_key)
                 return;
             if(item['position']) {
                 var pos = item['position'];
@@ -483,10 +485,10 @@ $(function() {
         };
         if(event[0] == 'player_leave_room') {
             var item = event[1];
-            if(item['key'] == personnal_key)
+            if(item['key'] == window.public_key)
                 return;
             for(var i=0; i < game.other_players.length; i++) {
-                if(game.other_players[i] && game.other_players[i].key == item['key']) {
+                if(game.other_players[i] && game.other_players[i].public_key == item['key']) {
                     game.other_players[i].remove();
                     game.other_players.remove(i);
                 };
@@ -494,7 +496,7 @@ $(function() {
             var p = get_player(item['key']);
         };
         if(event[0] == 'last_message') {
-            if(event[1][0] == personnal_key)
+            if(event[1][0] == window.public_key)
                 return;
             var p = get_player(event[1][0]);
             p.say(event[1][1]);
@@ -504,7 +506,7 @@ $(function() {
         };
         if(event[0] == 'effect') {
             var item = event[1];
-            if(item[0] == personnal_key)
+            if(item[0] == window.public_key)
                 return;
             var p = get_player(item[0]);
             if(p) {

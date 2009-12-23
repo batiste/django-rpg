@@ -64,3 +64,46 @@ class Map(models.Model):
 
     def __unicode__(self):
         return self.name
+
+
+class Player(models.Model):
+
+    public_key = models.CharField(max_length=50)
+    private_key = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
+    xp = models.IntegerField(default=0)
+    vitality = models.IntegerField(default=20)
+    str_position = models.CharField(max_length=20, default='[32,32]')
+
+    def set_position(self, pos):
+        self.str_position = str(pos)
+
+    def get_position(self):
+        return simplejson.loads(self.str_position)
+
+    position = property(get_position, set_position)
+
+    map_id = models.IntegerField(null=True)
+
+    def pub(self):
+        return {
+            'name':self.name,
+            'key':self.public_key,
+            'position':self.position,
+        }
+
+    def priv(self):
+        return {
+            'name':self.name,
+            'key':self.public_key,
+            'private_key':self.private_key,
+            'position':self.position,
+        }
+
+    def __unicode__(self):
+        return self.private_key
+
+
+
+
+    

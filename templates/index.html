@@ -32,7 +32,8 @@
         var map_content = "{{ map_content }}";
         {% if player %}
         var player_position = {{ player.position|safe }};
-        var personnal_key = "{{ player.key }}";
+        var public_key = "{{ player.public_key }}";
+        var private_key = "{{ player.private_key }}";
         var player_name = "{{ player.name }}";
         {% endif %}
     </script>
