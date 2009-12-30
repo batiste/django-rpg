@@ -33,20 +33,21 @@ class ChatRoom(object):
         for v in range(0, 9):
             self.event_buffer.append(None)
         npc = Player(name='Wise man')
-        self.players.append(npc)
+        self.npc = npc
+        self.players.append(self.npc)
         self.new_room_event(['new_player', npc.pub()])
         
     def move_pnj(self):
-        npc = self.get_player('old')
+        npc = self.npc
         if npc:
-            pos = [npc['position'][0], npc['position'][1]]
+            pos = [npc.position[0], npc.position[1]]
             pos[0] += random.randint(-50, 50)
             pos[1] += random.randint(-50, 50)
             safe = self.room_map.is_safe_position(pos)
             if safe:
-                npc['position'] = pos
+                npc.position = pos
                 self.new_room_event(['update_player_position',
-                    ['old', npc['position']]])
+                    [npc.public_key, npc.position]])
             spawn_later(5, self.move_pnj)
 
     def main(self, request):
