@@ -512,9 +512,9 @@ $(function() {
             if(p) {
                 animation = new Animation(item[0], p.position[0], p.position[1]);
                 animation.anim();
-            }
+            };
         };
-    }
+    };
 
     // keyboard stuff
     var keyboard = {'up':0, 'left':0, 'right':0, 'down':0};
@@ -576,7 +576,7 @@ $(function() {
     };
 
     var keyboard_events = $('#message')
-    $('body').click(function(){
+    $('body').click(function() {
         keyboard_events.focus();
     });
     keyboard_events.focus();
@@ -601,7 +601,7 @@ $(function() {
 
     $('#magic').click(function() {
         game.postJSON("/a/effect", {'type':'normal'}, function effect(response) {
-            animation = new Animation(personnal_key, me.position[0], me.position[1]);
+            animation = new Animation(public_key, me.position[0], me.position[1]);
             animation.anim();
         });
 

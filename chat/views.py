@@ -8,7 +8,7 @@ from gevent import spawn_later
 from django.conf import settings
 from django.utils.html import escape
 
-from chat.models import Map, Player
+from chat.models import Map, Player, Fight
 import random
 
 def pub_key(request):
@@ -29,11 +29,10 @@ class ChatRoom(object):
         self.room_event = Event()
         self.event_cursor = 0
         self.event_buffer = []
+        self.fights = []
         for v in range(0, 9):
             self.event_buffer.append(None)
-
-        npc = Player(name='The old man', private_key=str(uuid.uuid4()),
-            public_key=str(uuid.uuid4()))
+        npc = Player(name='Wise man')
         self.players.append(npc)
         self.new_room_event(['new_player', npc.pub()])
         
@@ -51,7 +50,6 @@ class ChatRoom(object):
             spawn_later(5, self.move_pnj)
 
     def main(self, request):
-        content = self.room_map.content.replace("\n", "")
         key = priv_key(request)
         player = self.get_player(key)
         return render_to_response(
@@ -59,7 +57,7 @@ class ChatRoom(object):
             {
                 'player':player,
                 'map':self.room_map,
-                'map_content':content,
+                'map_content':self.room_map.content.replace("\n", ""),
                 'MEDIA_URL': settings.MEDIA_URL
             }
         )
@@ -97,12 +95,8 @@ class ChatRoom(object):
         key = priv_key(request)
         new_player = self.get_player(key)
         if not new_player:
-            public_key = str(uuid.uuid4())
-            private_key = str(uuid.uuid4())
             name = escape(request.POST['body'])
             new_player = Player(
-                public_key=public_key,
-                private_key=private_key,
                 name=name,
                 position='[20,20]'
             )
@@ -113,7 +107,10 @@ class ChatRoom(object):
             event_list.append(['new_player', player.pub()])
         self.players.append(new_player)
         self.new_room_event(['new_player', new_player.pub()])
-        response = json_response({'you':new_player.priv(), 'events':event_list})
+        response = json_response({
+            'you':new_player.priv(),
+            'events':event_list
+        })
         response.set_cookie('private_key', new_player.private_key)
         return response
 
@@ -133,8 +130,26 @@ class ChatRoom(object):
         key = priv_key(request)
         player = self.get_player(key)
         msg = escape(request.POST['body'])
-        player['last_message'] = msg
+        #player.last_message = msg
         self.new_room_event(['last_message', [key, msg]])
+        return json_response([1])
+
+    def figth_new(self, request):
+        key = priv_key(request)
+        player = self.get_player(key)
+        bad = Player(name='bad')
+        self.new_room_event(['player_leave_room', player.pub()])
+        new_room.new_room_event(['new_player', player.pub()])
+        self.remove_player(key)
+        adversary = Player(name='Rogue level 1')
+        fight = Fight(
+            player=player,
+            adversary=adversary,
+            room_map=self.room_map
+        )
+
+        response.set_cookie('fight_key', fight.key)
+        
         return json_response([1])
 
     def room_updates(self, request):

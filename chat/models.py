@@ -1,6 +1,7 @@
 from django.db import models
 import simplejson
 import math
+import uuid
 
 # not use right now
 class Map(models.Model):
@@ -68,6 +69,14 @@ class Map(models.Model):
 
 class Player(models.Model):
 
+    def __init__(self, *args, **kwargs):
+        if not kwargs.get('private_key', False):
+            kwargs['private_key'] = str(uuid.uuid4())
+        if not kwargs.get('public_key', False):
+            kwargs['public_key'] = str(uuid.uuid4())
+            
+        return super(Player, self).__init__(*args, **kwargs)
+
     public_key = models.CharField(max_length=50)
     private_key = models.CharField(max_length=50)
     name = models.CharField(max_length=50)
@@ -102,6 +111,15 @@ class Player(models.Model):
 
     def __unicode__(self):
         return self.private_key
+
+
+class Fight(object):
+
+    def __init__(self, room_map, player, adversary):
+        self.public_key = str(uuid.uuid4())
+        self.player = player
+        self.adversary = adversary
+        self.room_map = room_map
 
 
 
