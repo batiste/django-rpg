@@ -14,6 +14,20 @@ Screenshot
 
 .. image:: http://batiste.dosimple.ch/django-rpg-screenshot.png
 
+
+Install
+=======
+
+To install on a ubuntu distribution::
+
+    $ sudo apt-get install python python-django python-pip git sqlite3
+    $ sudo pip install gevent
+    $ git clone git://github.com/batiste/django-rpg.git
+    $ cd django-rpg/
+    $ python manage.py syncdb
+    $ python run.py
+
+
 Features
 ========
 
