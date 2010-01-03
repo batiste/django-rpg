@@ -1,610 +1,181 @@
 $(function() {
     
-    var event_cursor = false;
-    // polling update
-    var updater = {
-        errorSleepTime: 500,
-        cursor: null,
+var map = $('#map');
+rpg.map = map;
+var tileset = $('#tileset');
+var mouseDown = false;
 
-        poll: function() {
-            var args = {"_xsrf": game.getCookie("_xsrf")};
-            if(event_cursor)
-                args["cursor"] = event_cursor
-            if (updater.cursor) args.cursor = updater.cursor;
-            $.ajax({
-                url: "/a/room/updates",
-                type: "POST",
-                dataType: "text",
-                data: $.param(args),
-                success: updater.onSuccess,
-                error: updater.onError
-            });
-        },
+if(map_content)
+    map_content = $.evalJSON(map_content);
 
-        onSuccess: function(response) {
-            var json = $.evalJSON(response);
-            for(var i=0; i <json.length; i++) {
-                handle_event(json[i]);
-            };
-    
-            updater.errorSleepTime = 500;
-            window.setTimeout(updater.poll, 0);
-        },
+rpg.grid = new rpg.Grid(
+    map, 35, 30, map_content
+);
 
-        onError: function(response) {
-            updater.errorSleepTime *= 2;
-            console.log("Poll error; sleeping for", updater.errorSleepTime, "ms");
-            window.setTimeout(updater.poll, updater.errorSleepTime);
-        }
-    };
-
-    game.postJSON = function(url, args, callback) {
-        args._xsrf = game.getCookie("_xsrf");
-        $.ajax({
-            url: url,
-            data: $.param(args),
-            dataType: "text",
-            type: "POST",
-            success: function(response) {
-                callback(response);
-                //console.log("SUCCESS:", response)
-            },
-            error: function(response) {
-                //console.log("ERROR:", response)
-            }
-        });
-    };
-
-    var map = $('#map');
-    var tileset = $('#tileset');
-    var mouseDown = false;
-
-    // GRID
-
-    function grid(w, h, blocs_init) {
-        this.width = w;
-        this.height = h;
-        this.blocs = [];
-        this.dom_blocs = [];
-        this.choosen_bloc = [0, 0];
-        this.is_loading_room = false;
-        this.forbidden = [
-            [9, 1],[10, 2],[0, 9],[1, 9],[2, 9],[0, 10],[1, 10],
-            [2, 10],[3, 10],[4, 10],[5, 10],[8, 9], [6, 8], [6, 10],
-            [7, 9],[7, 8],[7, 10],[6, 7], [6, 9],[9, 7],[10, 7],
-            [8, 8], [8 ,10], [9, 8],
-            [10, 8],[9, 9],[9, 10],[10, 10]
+tileset.click(function(e) {
+    var tile_pos = tileset.position();
+    rpg.grid.choosen_bloc = [
+            Math.floor((e.clientX-tile_pos.left) / 17),
+            Math.floor((e.clientY-tile_pos.top) / 17)
         ];
-        // create the grid
-        var top_offest = 0;
-        var left_offset = 0;
-        for(var i=0; i<this.height; i++) {
-            var dom_line = [];
-            var line = [];
-            var top_offest = i * 16;
-            for(var j=0; j<this.width; j++) {
-                left_offset = j * 16;
-                var dom_bloc = $('<div class="bloc" id="bloc-'+ i
-                    +'-'+ j +'" style="top:' + top_offest
-                    + 'px;left:'+ left_offset + 'px;"></div>');
-                map.append(dom_bloc);
-                dom_line.push(dom_bloc);
-                line.push(false);
-            };
-            this.dom_blocs.push(dom_line);
-            this.blocs.push(line);
-        };
-        //map.append($('<div id="indic"></div>'));
-        this.load_new_map(blocs_init);
-    };
+    var tile_pos_css = (-rpg.grid.choosen_bloc[0]*17-1)+'px ' + (-rpg.grid.choosen_bloc[1]*17-1)+'px';
+    $('#select').css('left', rpg.grid.choosen_bloc[0]*17 + tile_pos.left+'px');
+    $('#select').css('top', rpg.grid.choosen_bloc[1]*17 + tile_pos.top+'px');
+});
 
-    grid.prototype.get_bloc = function(indexes) {
-        return this.blocs[indexes[1]][indexes[0]];
-    };
+map.click(function(e) {
+    rpg.grid.paint_bloc($(e.target));
+});
 
-    grid.prototype.paint_bloc = function(dom_bloc) {
-        //var bloc = $(e.target);
-        if(dom_bloc.hasClass('bloc')) {
-            var b_string = dom_bloc.attr('id').split('-');
-            var tile_pos_css = (-this.choosen_bloc[0]*17-1)+'px ' + (-this.choosen_bloc[1]*17-1)+'px';
-            this.blocs[parseInt(b_string[1])][parseInt(b_string[2])] = this.choosen_bloc;
-            dom_bloc.css('background-position', tile_pos_css);
-        };
-    };
+map.mousedown(function(e) {
+    mouseDown = true;
+});
 
-    grid.prototype.is_bloc_walkable = function(bloc) {
-        for(var i=0; i < this.forbidden.length; i++) {
-            if(this.forbidden[i][0] == bloc[0]
-                && this.forbidden[i][1] == bloc[1])
-                    return false;
-        };
-        return true;
-    };
+map.mouseup(function(e) {
+    mouseDown = false;
+    //$('#grid-serialized').val($.toJSON(grid));
+});
 
-    grid.prototype.bloc_from_player_pos = function(pos) {
-        if(this.is_loading_room)
-            return;
-        var bloc_indexes = [
-            Math.floor((pos[0]) / 16),
-            Math.floor((pos[1]) / 16)
-        ];
-        var direction = false;
-        if(bloc_indexes[0] < 0) {
-            direction = "left";
-        }
-        if(bloc_indexes[0] > (grid1.width-1)) {
-            direction = "right";
-        };
-        if(bloc_indexes[1] < 0) {
-            direction = "top";
-        }
-        if(bloc_indexes[1] > (grid1.height-1)) {
-            direction = "bottom";
-        }
-        if(direction) {
-            this.is_loading_room = true;
-            game.postJSON("/a/change_room", {'direction':direction}, function change_room(response) {
-                var others_number = game.other_players.length - 1;
-                while(others_number >= 0) {
-                    if(game.other_players[0]) {
-                        game.other_players[0].remove();
-                    };
-                    game.other_players.remove(0);
-                    others_number = others_number - 1;
-                };
-                game.other_players = [];
-                json = $.evalJSON(response);
-                var new_room = json["change_room"];
-                var map_content = new_room["content"];
-                if(map_content)
-                    map_content = $.evalJSON(map_content);
-                grid1.load_new_map(map_content);
-                if(direction == "left")
-                    me.position[0] = (grid1.width-1) * 16;
-                if(direction == "right")
-                    me.position[0] = 0;
-                if(direction == "top")
-                    me.position[1] = (grid1.height-2) * 16;
-                if(direction == "bottom")
-                    me.position[1] = 0;
-                me.target_position = me.position;
-                me.move(me.position);
-                for(var i=0; i <json["events"].length; i++) {
-                    handle_event(json["events"][i]);
-                };
-                $('#room_x').text(new_room['x']);
-                $('#room_y').text(new_room['y']);
-                $('#room_name').text(new_room['name']);
-                grid1.is_loading_room = false;
-            });
-            return;
-        };
-        return this.get_bloc(bloc_indexes);
-    };
-
-    grid.prototype.load_new_map = function(blocs_init) {
-        for(var i=0; i < this.height; i++) {
-            for(var j=0; j < this.width; j++) {
-                var dom_bloc = this.dom_blocs[i][j];
-                if(blocs_init)
-                    var bloc = blocs_init[i][j];
-                else
-                    var bloc = [1, 1];
-                this.blocs[i][j] = bloc;
-                var tile_pos_css = (-bloc[0]*17-1)+'px ' + (-bloc[1]*17-1)+'px';
-                dom_bloc.css('background-position', tile_pos_css);
-            };
-        };
-    };
-
-    if(map_content)
-        map_content = $.evalJSON(map_content);
-
-    var grid1 = new grid(
-        35, 30, map_content
-    );
-
-    tileset.click(function(e) {
-        var tile_pos = tileset.position();
-        grid1.choosen_bloc = [
-                Math.floor((e.clientX-tile_pos.left) / 17),
-                Math.floor((e.clientY-tile_pos.top) / 17)
-            ];
-        var tile_pos_css = (-grid1.choosen_bloc[0]*17-1)+'px ' + (-grid1.choosen_bloc[1]*17-1)+'px';
-        $('#select').css('left', grid1.choosen_bloc[0]*17 + tile_pos.left+'px');
-        $('#select').css('top', grid1.choosen_bloc[1]*17 + tile_pos.top+'px');
-    });
-
-    map.click(function(e) {
-        grid1.paint_bloc($(e.target));
-    });
-
-    map.mousedown(function(e) {
-        mouseDown = true;
-    });
-
-    map.mouseup(function(e) {
-        mouseDown = false;
-        //$('#grid-serialized').val($.toJSON(grid));
-    });
-
-    map.mousemove(function(e) {
-        if(mouseDown) {
-            grid1.paint_bloc($(e.target));
-            return false;
-        };
-    });
-
-    // PLAYER
-
-    function Player(init_position, public_key, pname, private_key) {
-        this.position = [init_position[0], init_position[1]];
-        this.last_sent_position = [init_position[0], init_position[1]];
-        this.target_position = [init_position[0], init_position[1]];
-        this.pname = pname;
-        this.public_key = public_key;
-        this.private_key = private_key;
-        this.walking = false;
-        this.speed = 2;
-        this.element = $('<div class="player">\
-            <span class="text"><span class="name">'+this.pname+'</span>\
-            <span class="message"></span></span>\
-        </div>');
-        this.cycle = 0;
-        this.start_cycle = 0;
-        map.append(this.element);
-        this.message_element = this.element.find('.message')
-        this.message_timeout = false;
-        this.move(this.position);
-    };
-
-    Player.prototype.say = function(message) {
-        clearTimeout(this.message_timeout);
-        var el = this.message_element;
-        var chat_log_item = $('<li></li>');
-        chat_log_item.html('<span>' + this.pname + ':</span> ' + message);
-        $('#chat-log').append(chat_log_item)
-        $('#chat-log').scrollTop(1000)
-        this.message_element.html(message);
-        this.message_element.slideDown("slow");
-        var _hide_message = function(){el.slideUp("slow");}
-        this.message_timeout = setTimeout(_hide_message, 12000);
-    }
-
-    Player.prototype.anim = function() {
-        if(!this.walking) {
-            this.cycle = 1;
-        };
-        var pos = this.start_cycle + 24 * this.cycle;
-        this.element.css('background-position', -pos+'px');
-        if(!this.walking) {
-            return;
-        }
-        this.cycle += 1;
-        if(this.cycle > 2)
-            this.cycle = 0;
-    };
-
-    Player.prototype.move = function(pos) {
-        /*$('#indic')[0].style.left = (pos[0])+'px';
-        $('#indic')[0].style.top = (pos[1])+'px';*/
-        this.element[0].style.left = (pos[0] - 12)+'px';
-        this.element[0].style.top = (pos[1] - 32)+'px';
-    };
-
-    Player.prototype.init_position = function() {
-        this.move(this.position);
-    };
-
-    Player.prototype.remove = function() {
-        this.element.remove();
-    };
-
-    Player.prototype.update_target_position = function() {
-        var vect = keyboard_vector();
-        if(vect) {
-            var next_pos = [
-                this.target_position[0] + parseInt(this.speed * vect[0]),
-                this.target_position[1] + parseInt(this.speed * vect[1])
-            ];
-
-            var bloc = grid1.bloc_from_player_pos(next_pos);
-            if(bloc && grid1.is_bloc_walkable(bloc)) {
-                this.target_position = next_pos;
-            };
-        };
-    };
-
-    Player.prototype.set_start_cycle = function(vect) {
-        //var angle = Math.atan(vect[0]/vect[1]);
-        if(vect[1] > 0) {
-            this.start_cycle = 24 * 9;
-        }
-        if(vect[1] < 0) {
-            this.start_cycle = 24 * 3;
-        }
-        if(vect[0] > 0) {
-            this.start_cycle = 24 * 6;
-        };
-        if(vect[0] < 0) {
-            this.start_cycle = 0;
-        };
-    }
-
-    Player.prototype.move_to_target = function() {
-        var vect = [
-            this.target_position[0] - this.position[0],
-            this.target_position[1] - this.position[1]
-        ];
-        var norm = norm_vector(vect);
-        if(norm <= 1) {
-            this.position[0] = this.target_position[0];
-            this.position[1] = this.target_position[1];
-            this.move(this.position);
-            this.walking = false;
-            this.last_time = false;
-            return;
-        } else {
-            /*var d = new Date().getTime();
-            if(this.last_time) {
-                var diff = Math.min(2, (d - this.last_time) / 16.0);
-            } else {
-                var diff = 1;
-            }
-            this.last_time = d;*/
-            this.walking = true
-            vect[0] = vect[0] / norm * this.speed;
-            vect[1] = vect[1] / norm * this.speed;
-            this.set_start_cycle(vect);
-            this.position[0] += parseInt(vect[0]);
-            this.position[1] += parseInt(vect[1]);
-            this.move(this.position);
-            return;
-        }
-    };
-
-    Player.prototype.send_position = function () {
-        if(this.last_sent_position[0] != this.target_position[0]
-            || this.last_sent_position[1] != this.target_position[1])
-        {
-            var pos = $.toJSON(this.target_position)
-            this.last_sent_position[0] = this.target_position[0];
-            this.last_sent_position[1] = this.target_position[1];
-            game.postJSON("/a/player/update_position", {
-                    'body':pos
-                },
-                function(response) {}
-            );
-        };
-    };
-
-    // Start of the mundane things
-
-    $("#messageform").submit(function(e) {
-        e.preventDefault();
-        var message = $('#message');
-        message.focus();
-        game.postJSON("/a/message/new", {'body':message.val()}, function(response) {
-            me.say(message.val());
-            $('#message').val('');
-        });
+map.mousemove(function(e) {
+    if(mouseDown) {
+        rpg.grid.paint_bloc($(e.target));
         return false;
-    });
-
-    function get_player(key) {
-        for(var i=0; i < game.other_players.length; i++) {
-            if(game.other_players[i] && game.other_players[i].public_key == key)
-                return game.other_players[i]
-        }
-        return false;
-    }
-
-    var me = false;
-    game.other_players = [];
-
-    function bootstrap() {
-        
-        me = new Player(window.player_position, window.private_key, window.player_name);
-        me.init_position();
-        // start polling events
-        updater.poll();
-
-        // animation
-
-        var _players_move = function() {
-            me.update_target_position();
-            me.move_to_target();
-            for(var i=0; i <game.other_players.length; i++) {
-                if(game.other_players[i])
-                    game.other_players[i].move_to_target();
-            };
-        };
-        setInterval(_players_move, 16);
-
-        var _anim = function() {
-            if(!grid1.is_loading_room) {
-                me.anim();
-                for(var i=0; i <game.other_players.length; i++) {
-                    if(game.other_players[i])
-                        game.other_players[i].anim();
-                };
-            };
-        };
-        me.anim_interval = setInterval(_anim, 120);
-
-        // send the new position to the server
-        var _player_send_position = function() {
-            if(!grid1.is_loading_room)
-                me.send_position();
-        };
-        setInterval(_player_send_position, 1000);
     };
+});
 
-    if(!window.player_position) {
-        var player_name = prompt("Choose your hero name");
-        game.postJSON("/a/player/new", {'body':player_name}, function(response) {
-            response = $.evalJSON(response);
-            window.private_key = response["you"]["private_key"];
-            window.public_key = response["you"]["key"];
-            window.player_position = response["you"]["position"];
-            window.player_name = response["you"]["name"];
-            for(var i=0; i < response["events"].length; i++) {
-                handle_event(response["events"][i]);
+
+// Start of the mundane things
+
+$("#messageform").submit(function(e) {
+    e.preventDefault();
+    var message = $('#message');
+    message.focus();
+    rpg.postJSON("/a/message/new", {'body':message.val()}, function(response) {
+        me.say(message.val());
+        $('#message').val('');
+    });
+    return false;
+});
+
+var me = false;
+rpg.other_players = [];
+
+function bootstrap() {
+
+    rpg.me = new rpg.Player(window.player_position, window.private_key, window.player_name);
+    rpg.me.init_position();
+    // start polling events
+    rpg.updater.poll();
+
+    // animation
+
+    var _players_move = function() {
+        rpg.me.update_target_position();
+        rpg.me.move_to_target();
+        for(var i=0; i <rpg.other_players.length; i++) {
+            if(rpg.other_players[i])
+                rpg.other_players[i].move_to_target();
+        };
+    };
+    setInterval(_players_move, 16);
+
+    var _anim = function() {
+        if(!rpg.grid.is_loading_room) {
+            rpg.me.anim();
+            for(var i=0; i <rpg.other_players.length; i++) {
+                if(rpg.other_players[i])
+                    rpg.other_players[i].anim();
             };
-            bootstrap();
-        });
-    } else {
+        };
+    };
+    rpg.me.anim_interval = setInterval(_anim, 120);
+
+    // send the new position to the server
+    var _player_send_position = function() {
+        if(!rpg.grid.is_loading_room)
+            rpg.me.send_position();
+    };
+    setInterval(_player_send_position, 1000);
+};
+
+if(!window.player_position) {
+    var player_name = prompt("Choose your hero name");
+    rpg.postJSON("/a/player/new", {'body':player_name}, function(response) {
+        response = $.evalJSON(response);
+        window.private_key = response["you"]["private_key"];
+        window.public_key = response["you"]["key"];
+        window.player_position = response["you"]["position"];
+        window.player_name = response["you"]["name"];
+        for(var i=0; i < response["events"].length; i++) {
+            rpg.handle_event(response["events"][i]);
+        };
         bootstrap();
+    });
+} else {
+    bootstrap();
+}
+
+// keyboard stuff
+var keyboard = {'up':0, 'left':0, 'right':0, 'down':0};
+rpg.keyboard = keyboard;
+
+rpg.keyboard_vector = function keyboard_vector() {
+    var vect = [0, 0];
+    if(keyboard['up'])
+        vect[1] -= 1;
+    if(keyboard['left'])
+        vect[0] -= 1;
+    if(keyboard['down'])
+        vect[1] += 1;
+    if(keyboard['right'])
+        vect[0] += 1;
+    return rpg.normalize_vector(vect);
+};
+
+function update_keyboard(e, val) {
+    if(e.keyCode==40) {
+        keyboard['down'] = val;
     }
-
-    function handle_event(event) {
-        if(event[0] == 'update_player_position') {
-            var p = get_player(event[1][0]);
-            if(event[1][0] == window.public_key)
-                return;
-            p.target_position = event[1][1];
-        }
-        if(event[0] == 'new_player') {
-            var item = event[1];
-            if(item['key'] == window.public_key)
-                return;
-            if(item['position']) {
-                var pos = item['position'];
-            } else {
-                var pos = [50, 60];
-            }
-            var p = get_player(item['key']);
-            if(p === false) {
-                p = new Player([pos[0], pos[1]], item['key'], item['name']);
-                game.other_players.push(p);
-            }
-            p.target_position = [pos[0], pos[1]];
-            if(item['new_message']) {
-                p.say(item['new_message'])
-            }
-        };
-        if(event[0] == 'player_leave_room') {
-            var item = event[1];
-            if(item['key'] == window.public_key)
-                return;
-            for(var i=0; i < game.other_players.length; i++) {
-                if(game.other_players[i] && game.other_players[i].public_key == item['key']) {
-                    game.other_players[i].remove();
-                    game.other_players.remove(i);
-                };
-            };
-            var p = get_player(item['key']);
-        };
-        if(event[0] == 'last_message') {
-            if(event[1][0] == window.public_key)
-                return;
-            var p = get_player(event[1][0]);
-            p.say(event[1][1]);
-        }
-        if(event[0] == 'update_cursor') {
-            event_cursor = event[1];
-        };
-        if(event[0] == 'effect') {
-            var item = event[1];
-            if(item[0] == window.public_key)
-                return;
-            var p = get_player(item[0]);
-            if(p) {
-                animation = new Animation(item[0], p.position[0], p.position[1]);
-                animation.anim();
-            };
-        };
+    if(e.keyCode==38) {
+        keyboard['up'] = val;
+    }
+    if(e.keyCode==39) {
+        keyboard['right'] = val;
+    }
+    if(e.keyCode==37) {
+        keyboard['left'] = val;
     };
+};
 
-    // keyboard stuff
-    var keyboard = {'up':0, 'left':0, 'right':0, 'down':0};
-
-    function norm_vector(vect) {
-        return Math.sqrt(vect[0]*vect[0]+vect[1]*vect[1]);
-    };
-
-    function normalize_vector(vect) {
-        var norm = Math.sqrt(vect[0]*vect[0]+vect[1]*vect[1]);
-        if(norm==0)
-            return false
-        vect[0] = vect[0] / norm;
-        vect[1] = vect[1] / norm;
-        return vect;
-    };
-
-    function keyboard_vector() {
-        var vect = [0, 0];
-        if(keyboard['up'])
-            vect[1] -= 1;
-        if(keyboard['left'])
-            vect[0] -= 1;
-        if(keyboard['down'])
-            vect[1] += 1;
-        if(keyboard['right'])
-            vect[0] += 1;
-        return normalize_vector(vect);
-    };
-
-    function reset_cycle() {
-        if(keyboard['down']) {
-            start_cycle = 24 * 9;
-        }
-        if(keyboard['up']) {
-            start_cycle = 24 * 3;
-        }
-        if(keyboard['right']) {
-            start_cycle = 24 * 6;
-        }
-        if(keyboard['left']) {
-            start_cycle = 0;
-        };
-    };
-
-    function update_keyboard(e, val) {
-        if(e.keyCode==40) {
-            keyboard['down'] = val;
-        }
-        if(e.keyCode==38) {
-            keyboard['up'] = val;
-        }
-        if(e.keyCode==39) {
-            keyboard['right'] = val;
-        }
-        if(e.keyCode==37) {
-            keyboard['left'] = val;
-        };
-    };
-
-    var keyboard_events = $('#message')
-    $('body').click(function() {
-        keyboard_events.focus();
-    });
+var keyboard_events = $('#message')
+$('body').click(function() {
     keyboard_events.focus();
+});
+keyboard_events.focus();
 
-    keyboard_events.keydown(function(e) {
-        update_keyboard(e, 1);
-        //reset_cycle();
-        me.walking = true;
+keyboard_events.keydown(function(e) {
+    update_keyboard(e, 1);
+    rpg.me.walking = true;
+});
+keyboard_events.keyup(function(e) {
+    update_keyboard(e, 0);
+    if( !keyboard["up"] && !keyboard["left"] && !keyboard["right"] && !keyboard["down"] )
+        rpg.me.walking=false;
+});
+
+$('#save-map').click(function() {
+    var content = $.toJSON(rpg.grid.blocs);
+    rpg.postJSON("/a/save_map", {'content':content}, function change_room(response) {
+        $('#save-message').show().fadeOut("slow");
     });
-    keyboard_events.keyup(function(e) {
-        update_keyboard(e, 0);
-        if( !keyboard["up"] && !keyboard["left"] && !keyboard["right"] && !keyboard["down"] )
-            me.walking=false;
+})
+
+$('#magic').click(function() {
+    rpg.postJSON("/a/effect", {'type':'normal'}, function effect(response) {
+        animation = new Animation(public_key, rpg.me.position[0], rpg.me.position[1]);
+        animation.anim();
     });
 
-    $('#save-map').click(function() {
-        var content = $.toJSON(grid1.blocs);
-        game.postJSON("/a/save_map", {'content':content}, function change_room(response) {
-            $('#save-message').show().fadeOut("slow");
-        });
-    })
-
-    $('#magic').click(function() {
-        game.postJSON("/a/effect", {'type':'normal'}, function effect(response) {
-            animation = new Animation(public_key, me.position[0], me.position[1]);
-            animation.anim();
-        });
-
-    });
+});
 
 });
