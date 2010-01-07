@@ -135,7 +135,7 @@ class ChatRoom(object):
         self.new_room_event(['last_message', [key, msg]])
         return json_response([1])
 
-    def figth_new(self, request):
+    def fight_new(self, request):
         key = priv_key(request)
         player = self.get_player(key)
         bad = Player(name='bad')
@@ -255,6 +255,7 @@ room_updates = room_dispacher('room_updates')
 change_room = room_dispacher('change_room')
 save_map = room_dispacher('save_map')
 effect = room_dispacher('effect')
+fight_new = room_dispacher('fight_new')
 
 def create_message(from_, body):
     data = {'id': str(uuid.uuid4()), 'from': from_, 'body': body}

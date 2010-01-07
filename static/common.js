@@ -84,7 +84,7 @@ rpg.updater = {
     onError: function(response) {
         rpg.updater.errorSleepTime *= 2;
         console.log("Poll error; sleeping for", rpg.updater.errorSleepTime, "ms");
-        window.setTimeout(updater.poll, rpg.updater.errorSleepTime);
+        window.setTimeout(rpg.updater.poll, rpg.updater.errorSleepTime);
     }
 };
 

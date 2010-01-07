@@ -10,6 +10,7 @@ urlpatterns = patterns('chat.views',
     ('^a/change_room$', 'change_room'),
     ('^a/save_map', 'save_map'),
     ('^a/effect', 'effect'),
+    ('^a/fight/new', 'fight_new'),
 )
 
 urlpatterns += patterns('django.views.static',
