@@ -303,7 +303,8 @@ function Player(init_position, public_key, pname, private_key) {
     this.public_key = public_key;
     this.private_key = private_key;
     this.walking = false;
-    this.speed = 2;
+    // pixels by seconds
+    this.speed = 100.0;
     this.element = $('<div class="player">\
         <span class="text"><span class="name">'+this.pname+'</span>\
         <span class="message"></span></span>\
@@ -329,6 +330,7 @@ Player.prototype.say = function(message) {
     this.message_timeout = setTimeout(_hide_message, 12000);
 }
 
+// make the walking animation works
 Player.prototype.anim = function() {
     if(!this.walking) {
         this.cycle = 1;
@@ -363,9 +365,18 @@ Player.prototype.remove = function() {
 Player.prototype.update_target_position = function() {
     var vect = rpg.keyboard_vector();
     if(vect) {
+        var now = new Date().getTime();
+        if(this.last_time) {
+            var time_elapsed = now - this.last_time;
+        } else {
+            var time_elapsed = 20.0;
+        }
+        this.last_time = now;
+        var factor = (time_elapsed / 1000.0) * this.speed;
+        
         var next_pos = [
-            this.target_position[0] + parseInt(this.speed * vect[0]),
-            this.target_position[1] + parseInt(this.speed * vect[1])
+            this.target_position[0] + parseInt(vect[0]*factor),
+            this.target_position[1] + parseInt(vect[1]*factor)
         ];
 
         var bloc = rpg.grid.bloc_from_player_pos(next_pos);
@@ -376,7 +387,7 @@ Player.prototype.update_target_position = function() {
 };
 
 Player.prototype.set_start_cycle = function(vect) {
-    //var angle = Math.atan(vect[0]/vect[1]);
+    // set the cycle animation according to the direction
     if(vect[1] > 0) {
         this.start_cycle = 24 * 9;
     }
@@ -397,30 +408,36 @@ Player.prototype.move_to_target = function() {
         this.target_position[1] - this.position[1]
     ];
     var norm = rpg.norm_vector(vect);
-    if(norm <= 1) {
+    if (norm > 0) {
         this.position[0] = this.target_position[0];
         this.position[1] = this.target_position[1];
         this.move();
+        this.walking = true;
+        this.set_start_cycle(vect);
+    } else {
         this.walking = false;
         this.last_time = false;
-        return;
-    } else {
-        /*var d = new Date().getTime();
+    };
+    /*} else {
+        this.walking = true;
+        var d = new Date().getTime();
         if(this.last_time) {
-            var diff = Math.min(2, (d - this.last_time) / 16.0);
+            var time_elapsed = Math.min(60.0, Math.max(20.0, d - this.last_time));
         } else {
-            var diff = 1;
+            var time_elapsed = 20.0;
         }
-        this.last_time = d;*/
-        this.walking = true
-        vect[0] = vect[0] / norm * this.speed;
-        vect[1] = vect[1] / norm * this.speed;
+        var factor = (time_elapsed / 1000.0) * this.speed;
+        this.last_time = d;
         this.set_start_cycle(vect);
-        this.position[0] += parseInt(vect[0]);
-        this.position[1] += parseInt(vect[1]);
-        this.move();
-        return;
-    }
+        vect[0] = vect[0] * factor;
+        vect[1] = vect[1] * factor;
+        console.log(factor)
+        if(factor > 0) {
+            this.position[0] += parseInt(vect[0]);
+            this.position[1] += parseInt(vect[1]);
+            this.move();
+        }
+        return;*/
 };
 
 Player.prototype.send_position = function () {

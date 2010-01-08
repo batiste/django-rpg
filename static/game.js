@@ -77,7 +77,7 @@ function bootstrap() {
                 rpg.other_players[i].move_to_target();
         };
     };
-    setInterval(_players_move, 16);
+    setInterval(_players_move, 20);
 
     var _anim = function() {
         if(!rpg.grid.is_loading_room) {
@@ -88,14 +88,14 @@ function bootstrap() {
             };
         };
     };
-    rpg.me.anim_interval = setInterval(_anim, 120);
+    setInterval(_anim, 120);
 
     // send the new position to the server
     var _player_send_position = function() {
         if(!rpg.grid.is_loading_room)
             rpg.me.send_position();
     };
-    setInterval(_player_send_position, 1000);
+    setInterval(_player_send_position, 2000);
 };
 
 if(!window.player_position) {
