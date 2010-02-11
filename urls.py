@@ -11,12 +11,11 @@ urlpatterns = patterns('chat.views',
     ('^a/save_map', 'save_map'),
     ('^a/effect', 'effect'),
     ('^a/fight/new', 'fight_new'),
+
 )
 
-urlpatterns += patterns('django.views.static',
-    (r'^%s(?P<path>.*)$' % settings.MEDIA_URL.lstrip('/'), 
-      'serve', {
-      'document_root': settings.MEDIA_ROOT,
-      'show_indexes': True })
+urlpatterns += patterns('',
+    ('^static/(?P<path>.*)$', 'django.views.static.serve',
+        {'document_root': settings.MEDIA_ROOT, 'show_indexes':True}),
 )
 

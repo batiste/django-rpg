@@ -7,16 +7,39 @@
 <script src="jquery.js" type="text/javascript"></script>
 <script src="jscolor/jscolor.js" type="text/javascript"></script>
 
-<canvas id="myCanvasElt" width=288 height=32></canvas>
+<canvas id="canvas1" width=288 height=32></canvas>
 
 <input id="hair-colors" class="color" value="200,255,200">
 
 <input type="button" value="Change color" id="change">
 <div id="" style="width:50px;height:50px"></div>
 
+<br>
+<canvas id="canvas2" width=200 height=200></canvas>
+
+
+
 <script>
 
-var canvas = document.getElementById('myCanvasElt');
+var canvas2 = document.getElementById('canvas2');
+var ctx = canvas2.getContext('2d');
+ctx.translate(50,50);
+//ctx.save();
+ctx.fillStyle = "rgba(255,198,82,1)";
+ctx.arc(0, 0, 20, 0, Math.PI, true);
+ctx.quadraticCurveTo(-16, 18, 0, 20);
+ctx.quadraticCurveTo(16, 18, 20, 0);
+ctx.fill();
+ctx.closePath();
+
+ctx.fillStyle = "rgba(255,10,10,1)";
+ctx.beginPath();
+ctx.quadraticCurveTo(0, 0, 0, 50);
+ctx.quadraticCurveTo(-50, 0, 10, 0);
+ctx.fill();
+
+
+var canvas = document.getElementById('canvas1');
 var ctx = canvas.getContext('2d');
 var canvasData = ctx.createImageData(canvas.width, canvas.height);
 var cdata = canvasData.data;
