@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
 
-urlpatterns = patterns('chat.views',
+urlpatterns = patterns('rpg.views',
     ('^$', 'main'),
     ('^a/message/new$', 'message_new'),
     ('^a/room/updates$', 'room_updates'),

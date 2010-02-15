@@ -1,7 +1,7 @@
 [
   {
     "pk": 1, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 0, 
@@ -11,7 +11,7 @@
   }, 
   {
     "pk": 2, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -1, 
@@ -21,7 +21,7 @@
   }, 
   {
     "pk": 3, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -2, 
@@ -31,7 +31,7 @@
   }, 
   {
     "pk": 4, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -3, 
@@ -41,7 +41,7 @@
   }, 
   {
     "pk": 5, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -4, 
@@ -51,7 +51,7 @@
   }, 
   {
     "pk": 6, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -5, 
@@ -61,7 +61,7 @@
   }, 
   {
     "pk": 7, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -6, 
@@ -71,7 +71,7 @@
   }, 
   {
     "pk": 8, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -7, 
@@ -81,7 +81,7 @@
   }, 
   {
     "pk": 9, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -8, 
@@ -91,7 +91,7 @@
   }, 
   {
     "pk": 10, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -9, 
@@ -101,7 +101,7 @@
   }, 
   {
     "pk": 11, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -10, 
@@ -111,7 +111,7 @@
   }, 
   {
     "pk": 12, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -11, 
@@ -121,7 +121,7 @@
   }, 
   {
     "pk": 13, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -12, 
@@ -131,7 +131,7 @@
   }, 
   {
     "pk": 14, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -13, 
@@ -141,7 +141,7 @@
   }, 
   {
     "pk": 15, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -14, 
@@ -151,7 +151,7 @@
   }, 
   {
     "pk": 16, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -15, 
@@ -161,7 +161,7 @@
   }, 
   {
     "pk": 17, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -16, 
@@ -171,7 +171,7 @@
   }, 
   {
     "pk": 18, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -17, 
@@ -181,7 +181,7 @@
   }, 
   {
     "pk": 19, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -18, 
@@ -191,7 +191,7 @@
   }, 
   {
     "pk": 20, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -19, 
@@ -201,7 +201,7 @@
   }, 
   {
     "pk": 21, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -20, 
@@ -211,7 +211,7 @@
   }, 
   {
     "pk": 22, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -21, 
@@ -221,7 +221,7 @@
   }, 
   {
     "pk": 23, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -22, 
@@ -231,7 +231,7 @@
   }, 
   {
     "pk": 24, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -23, 
@@ -241,7 +241,7 @@
   }, 
   {
     "pk": 25, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -24, 
@@ -251,7 +251,7 @@
   }, 
   {
     "pk": 26, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -25, 
@@ -261,7 +261,7 @@
   }, 
   {
     "pk": 27, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -26, 
@@ -271,7 +271,7 @@
   }, 
   {
     "pk": 28, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -27, 
@@ -281,7 +281,7 @@
   }, 
   {
     "pk": 29, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -28, 
@@ -291,7 +291,7 @@
   }, 
   {
     "pk": 30, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -29, 
@@ -301,7 +301,7 @@
   }, 
   {
     "pk": 31, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -30, 
@@ -311,7 +311,7 @@
   }, 
   {
     "pk": 32, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -31, 
@@ -321,7 +321,7 @@
   }, 
   {
     "pk": 33, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -32, 
@@ -331,7 +331,7 @@
   }, 
   {
     "pk": 34, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -33, 
@@ -341,7 +341,7 @@
   }, 
   {
     "pk": 35, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -34, 
@@ -351,7 +351,7 @@
   }, 
   {
     "pk": 36, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -35, 
@@ -361,7 +361,7 @@
   }, 
   {
     "pk": 37, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -36, 
@@ -371,7 +371,7 @@
   }, 
   {
     "pk": 38, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -37, 
@@ -381,7 +381,7 @@
   }, 
   {
     "pk": 39, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": -38, 
@@ -391,7 +391,7 @@
   }, 
   {
     "pk": 40, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 1, 
@@ -401,7 +401,7 @@
   }, 
   {
     "pk": 41, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 2, 
@@ -411,7 +411,7 @@
   }, 
   {
     "pk": 42, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 3, 
@@ -421,7 +421,7 @@
   }, 
   {
     "pk": 43, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 4, 
@@ -431,7 +431,7 @@
   }, 
   {
     "pk": 44, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 5, 
@@ -441,7 +441,7 @@
   }, 
   {
     "pk": 45, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 6, 
@@ -451,7 +451,7 @@
   }, 
   {
     "pk": 46, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 7, 
@@ -461,7 +461,7 @@
   }, 
   {
     "pk": 47, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 8, 
@@ -471,7 +471,7 @@
   }, 
   {
     "pk": 48, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 9, 
@@ -481,7 +481,7 @@
   }, 
   {
     "pk": 49, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 10, 
@@ -491,7 +491,7 @@
   }, 
   {
     "pk": 50, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 11, 
@@ -501,7 +501,7 @@
   }, 
   {
     "pk": 51, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 12, 
@@ -511,7 +511,7 @@
   }, 
   {
     "pk": 52, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 13, 
@@ -521,7 +521,7 @@
   }, 
   {
     "pk": 53, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 14, 
@@ -531,7 +531,7 @@
   }, 
   {
     "pk": 54, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 15, 
@@ -541,7 +541,7 @@
   }, 
   {
     "pk": 55, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 16, 
@@ -551,7 +551,7 @@
   }, 
   {
     "pk": 56, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 17, 
@@ -561,7 +561,7 @@
   }, 
   {
     "pk": 57, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 18, 
@@ -571,7 +571,7 @@
   }, 
   {
     "pk": 58, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 19, 
@@ -581,7 +581,7 @@
   }, 
   {
     "pk": 59, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 20, 
@@ -591,7 +591,7 @@
   }, 
   {
     "pk": 60, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 21, 
@@ -601,7 +601,7 @@
   }, 
   {
     "pk": 61, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 22, 
@@ -611,7 +611,7 @@
   }, 
   {
     "pk": 62, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 23, 
@@ -621,7 +621,7 @@
   }, 
   {
     "pk": 63, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 24, 
@@ -631,7 +631,7 @@
   }, 
   {
     "pk": 64, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 25, 
@@ -641,7 +641,7 @@
   }, 
   {
     "pk": 65, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 26, 
@@ -651,7 +651,7 @@
   }, 
   {
     "pk": 66, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 27, 
@@ -661,7 +661,7 @@
   }, 
   {
     "pk": 67, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 28, 
@@ -671,7 +671,7 @@
   }, 
   {
     "pk": 68, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 29, 
@@ -681,7 +681,7 @@
   }, 
   {
     "pk": 69, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 30, 
@@ -691,7 +691,7 @@
   }, 
   {
     "pk": 70, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 31, 
@@ -701,7 +701,7 @@
   }, 
   {
     "pk": 71, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 32, 
@@ -711,7 +711,7 @@
   }, 
   {
     "pk": 72, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 33, 
@@ -721,7 +721,7 @@
   }, 
   {
     "pk": 73, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 34, 
@@ -731,7 +731,7 @@
   }, 
   {
     "pk": 74, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 35, 
@@ -741,7 +741,7 @@
   }, 
   {
     "pk": 75, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 36, 
@@ -751,7 +751,7 @@
   }, 
   {
     "pk": 76, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 37, 
@@ -761,7 +761,7 @@
   }, 
   {
     "pk": 77, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 38, 
@@ -771,7 +771,7 @@
   }, 
   {
     "pk": 78, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 39, 
@@ -781,7 +781,7 @@
   }, 
   {
     "pk": 79, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 40, 
@@ -791,7 +791,7 @@
   }, 
   {
     "pk": 80, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 41, 
@@ -801,7 +801,7 @@
   }, 
   {
     "pk": 81, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 42, 
@@ -811,7 +811,7 @@
   }, 
   {
     "pk": 82, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 43, 
@@ -821,7 +821,7 @@
   }, 
   {
     "pk": 83, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 44, 
@@ -831,7 +831,7 @@
   }, 
   {
     "pk": 84, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 45, 
@@ -841,7 +841,7 @@
   }, 
   {
     "pk": 85, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 46, 
@@ -851,7 +851,7 @@
   }, 
   {
     "pk": 86, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 47, 
@@ -861,7 +861,7 @@
   }, 
   {
     "pk": 87, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 48, 
@@ -871,7 +871,7 @@
   }, 
   {
     "pk": 88, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 49, 
@@ -881,7 +881,7 @@
   }, 
   {
     "pk": 89, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 50, 
@@ -891,7 +891,7 @@
   }, 
   {
     "pk": 90, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 51, 
@@ -901,7 +901,7 @@
   }, 
   {
     "pk": 91, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 52, 
@@ -911,7 +911,7 @@
   }, 
   {
     "pk": 92, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 53, 
@@ -921,7 +921,7 @@
   }, 
   {
     "pk": 93, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 54, 
@@ -931,7 +931,7 @@
   }, 
   {
     "pk": 94, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 55, 
@@ -941,7 +941,7 @@
   }, 
   {
     "pk": 95, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 56, 
@@ -951,7 +951,7 @@
   }, 
   {
     "pk": 96, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 57, 
@@ -961,7 +961,7 @@
   }, 
   {
     "pk": 97, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 58, 
@@ -971,7 +971,7 @@
   }, 
   {
     "pk": 98, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 59, 
@@ -981,7 +981,7 @@
   }, 
   {
     "pk": 99, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 60, 
@@ -991,7 +991,7 @@
   }, 
   {
     "pk": 100, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 61, 
@@ -1001,7 +1001,7 @@
   }, 
   {
     "pk": 101, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 62, 
@@ -1011,7 +1011,7 @@
   }, 
   {
     "pk": 102, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 63, 
@@ -1021,7 +1021,7 @@
   }, 
   {
     "pk": 103, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 64, 
@@ -1031,7 +1031,7 @@
   }, 
   {
     "pk": 104, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 65, 
@@ -1041,7 +1041,7 @@
   }, 
   {
     "pk": 105, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 0, 
       "x": 66, 
@@ -1051,7 +1051,7 @@
   }, 
   {
     "pk": 106, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": -1, 
       "x": 0, 
@@ -1061,7 +1061,7 @@
   }, 
   {
     "pk": 107, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": -2, 
       "x": 0, 
@@ -1071,7 +1071,7 @@
   }, 
   {
     "pk": 108, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": -3, 
       "x": 0, 
@@ -1081,7 +1081,7 @@
   }, 
   {
     "pk": 109, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": -3, 
       "x": -1, 
@@ -1091,7 +1091,7 @@
   }, 
   {
     "pk": 110, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 1, 
       "x": 0, 
@@ -1101,7 +1101,7 @@
   }, 
   {
     "pk": 111, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 2, 
       "x": 0, 
@@ -1111,7 +1111,7 @@
   }, 
   {
     "pk": 112, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 3, 
       "x": 0, 
@@ -1121,7 +1121,7 @@
   }, 
   {
     "pk": 113, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 4, 
       "x": 0, 
@@ -1131,7 +1131,7 @@
   }, 
   {
     "pk": 114, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 4, 
       "x": -1, 
@@ -1141,7 +1141,7 @@
   }, 
   {
     "pk": 115, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 4, 
       "x": 1, 
@@ -1151,7 +1151,7 @@
   }, 
   {
     "pk": 116, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 4, 
       "x": 2, 
@@ -1161,7 +1161,7 @@
   }, 
   {
     "pk": 117, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 5, 
       "x": 2, 
@@ -1171,7 +1171,7 @@
   }, 
   {
     "pk": 118, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 5, 
       "x": 1, 
@@ -1181,7 +1181,7 @@
   }, 
   {
     "pk": 119, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 6, 
       "x": 1, 
@@ -1191,7 +1191,7 @@
   }, 
   {
     "pk": 120, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 3, 
       "x": 1, 
@@ -1201,7 +1201,7 @@
   }, 
   {
     "pk": 121, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 2, 
       "x": 1, 
@@ -1211,7 +1211,7 @@
   }, 
   {
     "pk": 122, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 1, 
       "x": 1, 
@@ -1221,7 +1221,7 @@
   }, 
   {
     "pk": 123, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": -1, 
       "x": -1, 
@@ -1231,7 +1231,7 @@
   }, 
   {
     "pk": 124, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": -1, 
       "x": 1, 
@@ -1241,7 +1241,7 @@
   }, 
   {
     "pk": 125, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 1, 
       "x": -1, 
@@ -1251,7 +1251,7 @@
   }, 
   {
     "pk": 126, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": -2, 
       "x": -1, 
@@ -1261,7 +1261,7 @@
   }, 
   {
     "pk": 127, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": -2, 
       "x": 1, 
@@ -1271,7 +1271,7 @@
   }, 
   {
     "pk": 128, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": -2, 
       "x": 2, 
@@ -1281,7 +1281,7 @@
   }, 
   {
     "pk": 129, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": -1, 
       "x": 2, 
@@ -1291,7 +1291,7 @@
   }, 
   {
     "pk": 130, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": -1, 
       "x": 3, 
@@ -1301,7 +1301,7 @@
   }, 
   {
     "pk": 131, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": -1, 
       "x": -2, 
@@ -1311,7 +1311,7 @@
   }, 
   {
     "pk": 132, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 1, 
       "x": -2, 
@@ -1321,7 +1321,7 @@
   }, 
   {
     "pk": 133, 
-    "model": "chat.map", 
+    "model": "rpg.map",
     "fields": {
       "y": 2, 
       "x": -1, 
@@ -1331,7 +1331,7 @@
   }, 
   {
     "pk": 1, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "3fd2657f-be8b-4c75-a5af-cac2a88d5c76", 
       "private_key": "09671518-ecfa-4447-a01c-e8d012ca18dc", 
@@ -1344,7 +1344,7 @@
   }, 
   {
     "pk": 2, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "fbe16119-32c7-4cbd-ab14-1d61bce959e9", 
       "private_key": "ce4901e1-3272-41af-8e3a-b8a07f442a36", 
@@ -1357,7 +1357,7 @@
   }, 
   {
     "pk": 3, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "f0c6db6d-03f5-4774-bfd7-b76b2088b79b", 
       "private_key": "3625cb40-9290-4511-b2d3-8a39fa200d69", 
@@ -1370,7 +1370,7 @@
   }, 
   {
     "pk": 4, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "df8581a1-7381-4350-ad45-b16af11e8e3b", 
       "private_key": "10ac06c4-a16c-4c7f-961f-cfef4e1c6e63", 
@@ -1383,7 +1383,7 @@
   }, 
   {
     "pk": 5, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "b93c8b23-cb04-4a27-a444-cf8dfb9ec718", 
       "private_key": "e78cba12-aeac-45c0-b733-139e3ac6527d", 
@@ -1396,7 +1396,7 @@
   }, 
   {
     "pk": 6, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "f35ccb82-ac5c-41f0-bfcf-3bd54841f6fe", 
       "private_key": "b2dd684b-3dec-4911-8458-93ae95fbceb6", 
@@ -1409,7 +1409,7 @@
   }, 
   {
     "pk": 7, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "c2ef682d-d10b-44ad-88c5-d7c2293bbb04", 
       "private_key": "18be3ff9-393b-4504-abcf-cf5430c55b3f", 
@@ -1422,7 +1422,7 @@
   }, 
   {
     "pk": 8, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "0b1cfcd7-0458-496d-981d-24e9e43809a0", 
       "private_key": "83bbf7ca-f2dd-4bfd-8acb-3f6595e3a8d3", 
@@ -1435,7 +1435,7 @@
   }, 
   {
     "pk": 9, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "0300e120-1a92-4388-9eb9-9cce10eff410", 
       "private_key": "9120f90a-2123-46ae-bba5-292ed30bb67b", 
@@ -1448,7 +1448,7 @@
   }, 
   {
     "pk": 10, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "42a67a6a-9e89-47c5-963d-e9b15eb0a325", 
       "private_key": "c55567b5-ad6e-4b9d-92f7-49f07f355714", 
@@ -1461,7 +1461,7 @@
   }, 
   {
     "pk": 11, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "2deafb4b-ea59-479f-b11f-60f33d9c393a", 
       "private_key": "aaf201e7-28d8-4994-ab70-277aaeb84f9a", 
@@ -1474,7 +1474,7 @@
   }, 
   {
     "pk": 12, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "cb0085b0-b1bc-4728-bdf4-f58b90e6817a", 
       "private_key": "2cfccefe-fdd4-4e2d-ad40-1606ff24bcf9", 
@@ -1487,7 +1487,7 @@
   }, 
   {
     "pk": 13, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "34b3c255-071d-4e69-b83e-5816b9aa30e8", 
       "private_key": "26a27125-bdbf-4b59-868d-1e06433efe68", 
@@ -1500,7 +1500,7 @@
   }, 
   {
     "pk": 14, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "8aa3f705-f8df-4613-9845-13113310cae1", 
       "private_key": "cec10dc8-0605-4cde-89a3-a26a3c0a567c", 
@@ -1513,7 +1513,7 @@
   }, 
   {
     "pk": 15, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "8e0bcd78-ec01-4dce-8698-cf33510b1495", 
       "private_key": "771f75f6-6a82-40a4-9f16-27042a1e34bd", 
@@ -1526,7 +1526,7 @@
   }, 
   {
     "pk": 16, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "8be20170-79fc-4179-8fff-6aa74ad31070", 
       "private_key": "91adde3b-6873-4c27-ba3d-09ff87158a93", 
@@ -1539,7 +1539,7 @@
   }, 
   {
     "pk": 17, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "cca96f12-cb9c-44e9-9c2a-88446d42d048", 
       "private_key": "5396944a-97d6-4387-b17f-7abf1766e542", 
@@ -1552,7 +1552,7 @@
   }, 
   {
     "pk": 18, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "1db395bd-ea43-46a7-b6ea-7a95d1517eb0", 
       "private_key": "e03c6d3a-eae1-4d13-985d-2fe359f0ed2b", 
@@ -1565,7 +1565,7 @@
   }, 
   {
     "pk": 19, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "ec11ccf2-05a4-471c-87a5-e5487c58d58e", 
       "private_key": "9cfe3fd4-354b-41f0-9496-a3260a4a2210", 
@@ -1578,7 +1578,7 @@
   }, 
   {
     "pk": 20, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "ef788f50-69c9-482b-8703-e35ddb6d9bae", 
       "private_key": "eb8b860b-7fd3-4d98-be11-8c95a8b7a100", 
@@ -1591,7 +1591,7 @@
   }, 
   {
     "pk": 21, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "5221f301-8602-4fe1-ab8e-88c740e95de7", 
       "private_key": "c5490051-c2b9-4984-9f4e-0f79b6ac133e", 
@@ -1604,7 +1604,7 @@
   }, 
   {
     "pk": 22, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "510b1ff2-c68c-401c-b1df-107d70852183", 
       "private_key": "72cc096d-6774-4613-854a-52cb50224421", 
@@ -1617,7 +1617,7 @@
   }, 
   {
     "pk": 23, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "e2f38ff6-321b-49e8-a66a-59f78afc5bdb", 
       "private_key": "0b1d21f0-2e9d-4c7e-8fc7-dee9dd757230", 
@@ -1630,7 +1630,7 @@
   }, 
   {
     "pk": 24, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "9b70dd8c-ef0a-488a-b83a-1e99895fad81", 
       "private_key": "bbb362da-fad5-4e37-8735-0c3170045936", 
@@ -1643,7 +1643,7 @@
   }, 
   {
     "pk": 25, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "2b51009b-64c7-4282-9b04-9a817cf67214", 
       "private_key": "c24856db-03d1-4c94-a4e2-76180770883d", 
@@ -1656,7 +1656,7 @@
   }, 
   {
     "pk": 26, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "3e52d1ec-c69e-40c9-85d6-67489ab3448f", 
       "private_key": "e96b08a5-e33d-4616-a922-cc955c4680d7", 
@@ -1669,7 +1669,7 @@
   }, 
   {
     "pk": 27, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "d1327a5d-2b70-47d8-b09a-d0cf03ff24fa", 
       "private_key": "d9f1d799-1ed1-4cc0-94a1-1e326e6978ea", 
@@ -1682,7 +1682,7 @@
   }, 
   {
     "pk": 28, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "44c26e2d-8f16-4921-a9ed-03f07767a2bf", 
       "private_key": "29a0fa0d-2953-4f07-92c6-10fe167f0f9b", 
@@ -1695,7 +1695,7 @@
   }, 
   {
     "pk": 29, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "852bf3b8-bfa5-457e-b85b-cd3e0368732b", 
       "private_key": "a25fe7aa-7238-47d3-983f-5a6de0895171", 
@@ -1708,7 +1708,7 @@
   }, 
   {
     "pk": 30, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "73fe4914-0112-4566-a02a-22a6af55f684", 
       "private_key": "f26daf2e-93fc-44e6-94c9-b42abcb2042a", 
@@ -1721,7 +1721,7 @@
   }, 
   {
     "pk": 31, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "c2f2f6bf-d7d1-4816-b5ef-2a67bc9b322e", 
       "private_key": "8fc975a5-3d37-4850-afce-ee22ea04e121", 
@@ -1734,7 +1734,7 @@
   }, 
   {
     "pk": 32, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "", 
       "private_key": "16efba4e-435b-4370-880a-8ac724716fdc", 
@@ -1747,7 +1747,7 @@
   }, 
   {
     "pk": 33, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "", 
       "private_key": "0358463c-3517-4d68-b32c-b22d9e85d470", 
@@ -1760,7 +1760,7 @@
   }, 
   {
     "pk": 34, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "17ac5bd0-d180-4e7a-b84b-8875cf339e1e", 
       "private_key": "ba47780b-670c-411f-a0b1-37224801447f", 
@@ -1773,7 +1773,7 @@
   }, 
   {
     "pk": 35, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "7396bca6-10d0-4fdf-8c31-269cbae10a59", 
       "private_key": "8aece230-109f-4b39-b16f-37a63bca0bfc", 
@@ -1786,7 +1786,7 @@
   }, 
   {
     "pk": 36, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "44a0056f-5048-49ef-aa43-8255a535c453", 
       "private_key": "6c838655-088b-4b23-ae02-b2e5e86e3a68", 
@@ -1799,7 +1799,7 @@
   }, 
   {
     "pk": 37, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "ef8039ff-4698-486f-88a5-cf242ab37068", 
       "private_key": "7d3e6372-9976-4478-848a-70f4d6f4d903", 
@@ -1812,7 +1812,7 @@
   }, 
   {
     "pk": 38, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "4cc60937-fbe4-4256-bb14-32056b636d28", 
       "private_key": "aa305df4-f37e-4b2b-893d-abc36884c571", 
@@ -1825,7 +1825,7 @@
   }, 
   {
     "pk": 39, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "86ecbe3e-251d-4a49-8485-50fa44319ddc", 
       "private_key": "f5968c28-50f2-453e-a05d-745e85481391", 
@@ -1838,7 +1838,7 @@
   }, 
   {
     "pk": 40, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "afce2bf4-c0c1-4939-820e-a897e31d789e", 
       "private_key": "d5ff0de1-5b6c-4e27-ba7d-f2895f6e3011", 
@@ -1851,7 +1851,7 @@
   }, 
   {
     "pk": 41, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "f598d39d-afba-4f2d-8327-5ba72a426bfc", 
       "private_key": "d39c4c9b-e634-48f1-889f-19e8ad219080", 
@@ -1864,7 +1864,7 @@
   }, 
   {
     "pk": 42, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "e2dc2f03-8586-4af3-a737-e6cf5bc1bef0", 
       "private_key": "b9fcaadf-58a2-4b44-b5ab-0f3db5a3e39c", 
@@ -1877,7 +1877,7 @@
   }, 
   {
     "pk": 43, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "e8c27f61-7a65-45b1-b7e6-e0afe2a2a5a9", 
       "private_key": "68bf6e30-6465-4e55-8cf1-f667267a2ecd", 
@@ -1890,7 +1890,7 @@
   }, 
   {
     "pk": 44, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "61d7e121-934a-43fe-8750-2d61ef776e50", 
       "private_key": "37e37ead-a3fe-4d64-ae1f-cf38b477427d", 
@@ -1903,7 +1903,7 @@
   }, 
   {
     "pk": 45, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "d7d3d15a-acb3-4b3b-bb5b-718101ec4b2e", 
       "private_key": "81d25423-1d86-4c3b-878b-ba7a7c34658e", 
@@ -1916,7 +1916,7 @@
   }, 
   {
     "pk": 46, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "d99bc76a-cb79-43c8-9b42-3c4f6ca41074", 
       "private_key": "0f2fcbc1-2279-4dcd-93f9-4771f6f998eb", 
@@ -1929,7 +1929,7 @@
   }, 
   {
     "pk": 47, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "5ff54aed-228f-497f-8477-541271a87af9", 
       "private_key": "184f8288-6e6b-4093-8c56-bd3a58b5cc70", 
@@ -1942,7 +1942,7 @@
   }, 
   {
     "pk": 48, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "90d2ef70-9905-481a-90ac-c8e66d5dcf0d", 
       "private_key": "4365446b-3d8b-42aa-9459-b2e8b554b09d", 
@@ -1955,7 +1955,7 @@
   }, 
   {
     "pk": 49, 
-    "model": "chat.player", 
+    "model": "rpg.player",
     "fields": {
       "public_key": "dd06a154-84da-47eb-9ab3-442e63b625fb", 
       "private_key": "1e976127-1e9e-4125-9cf5-b50c657fa557", 

@@ -8,7 +8,7 @@ from gevent import spawn_later
 from django.conf import settings
 from django.utils.html import escape
 
-from chat.models import Map, Player, Fight
+from rpg.models import Map, Player, Fight
 import random
 
 def pub_key(request):
