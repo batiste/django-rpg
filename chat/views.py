@@ -35,7 +35,7 @@ class ChatRoom(object):
         npc = Player(name='Wise man')
         self.npc = npc
         self.players.append(self.npc)
-        self.new_room_event(['new_player', npc.pub()])
+        self.new_event(['new_player', npc.pub()])
         
     def move_pnj(self):
         npc = self.npc
@@ -46,7 +46,7 @@ class ChatRoom(object):
             safe = self.room_map.is_safe_position(pos)
             if safe:
                 npc.position = pos
-                self.new_room_event(['update_player_position',
+                self.new_event(['update_player_position',
                     [npc.public_key, npc.position]])
             spawn_later(5, self.move_pnj)
 
@@ -63,7 +63,7 @@ class ChatRoom(object):
             }
         )
 
-    def new_room_event(self, value):
+    def new_event(self, value):
         self.event_cursor += 1
         if self.event_cursor >= len(self.event_buffer):
             self.event_cursor = 0
@@ -89,7 +89,7 @@ class ChatRoom(object):
     def save_map(self, request):
         self.room_map.ground = request.POST['content']
         self.room_map.save()
-        self.new_room_event({'update_map':self.room_map.serialized()})
+        self.new_event({'update_map':self.room_map.serialized()})
         return json_response([1])
 
     def player_new(self, request):
@@ -107,7 +107,7 @@ class ChatRoom(object):
         for player in self.players:
             event_list.append(['new_player', player.pub()])
         self.players.append(new_player)
-        self.new_room_event(['new_player', new_player.pub()])
+        self.new_event(['new_player', new_player.pub()])
         response = json_response({
             'you':new_player.priv(),
             'events':event_list
@@ -121,7 +121,7 @@ class ChatRoom(object):
         pos = request.POST.get('body', False)
         if(pos):
             player.position = pos
-            self.new_room_event([
+            self.new_event([
                 'update_player_position',
                 [player.public_key, player.position]
             ])
@@ -132,15 +132,15 @@ class ChatRoom(object):
         player = self.get_player(key)
         msg = escape(request.POST['body'])
         #player.last_message = msg
-        self.new_room_event(['last_message', [key, msg]])
+        self.new_event(['last_message', [player.public_key, msg]])
         return json_response([1])
 
     def fight_new(self, request):
         key = priv_key(request)
         player = self.get_player(key)
         bad = Player(name='bad')
-        self.new_room_event(['player_leave_room', player.pub()])
-        new_room.new_room_event(['new_player', player.pub()])
+        self.new_event(['player_leave_room', player.pub()])
+        new_room.new_event(['new_player', player.pub()])
         self.remove_player(key)
         adversary = Player(name='Rogue level 1')
         fight = Fight(
@@ -187,7 +187,7 @@ class ChatRoom(object):
         key = priv_key(request)
         player = self.get_player(key)
         effect_type = request.POST.get('type')
-        self.new_room_event(['effect', [player.public_key,
+        self.new_event(['effect', [player.public_key,
             effect_type]])
         return json_response([1])
         
@@ -213,10 +213,10 @@ class ChatRoom(object):
         old_map = Map.objects.get(pk=self.pk)
         room_map, created = Map.objects.get_or_create(x=old_map.x+x,
             y=old_map.y+y)
-        self.new_room_event(['player_leave_room', player.pub()])
+        self.new_event(['player_leave_room', player.pub()])
         new_room = get_room(room_map.id)
         new_room.players.append(player)
-        new_room.new_room_event(['new_player', player.pub()])
+        new_room.new_event(['new_player', player.pub()])
         self.remove_player(key)
         # send all the other player
         event_list = []
@@ -247,6 +247,7 @@ def room_dispacher(method):
         return getattr(room, method)(request)
     return _method
 
+# dispatch to rooms
 main = room_dispacher('main')
 message_new = room_dispacher('message_new')
 player_new = room_dispacher('player_new')
@@ -256,11 +257,6 @@ change_room = room_dispacher('change_room')
 save_map = room_dispacher('save_map')
 effect = room_dispacher('effect')
 fight_new = room_dispacher('fight_new')
-
-def create_message(from_, body):
-    data = {'id': str(uuid.uuid4()), 'from': from_, 'body': body}
-    data['html'] = render_to_string('message.html', dictionary={'message': data})
-    return data
 
 def json_response(value, **kwargs):
     kwargs.setdefault('content_type', 'text/javascript; charset=UTF-8')

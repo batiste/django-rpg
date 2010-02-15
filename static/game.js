@@ -51,7 +51,7 @@ $("#messageform").submit(function(e) {
     var message = $('#message');
     message.focus();
     rpg.postJSON("/a/message/new", {'body':message.val()}, function(response) {
-        me.say(message.val());
+        rpg.me.say(message.val());
         $('#message').val('');
     });
     return false;

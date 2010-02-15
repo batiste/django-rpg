@@ -134,7 +134,7 @@ rpg.handle_event = function handle_event(event) {
             return;
         var p = rpg.get_player(event[1][0]);
         p.say(event[1][1]);
-    }
+    };
     if(event[0] == 'update_cursor') {
         rpg.event_cursor = event[1];
     };
@@ -328,7 +328,7 @@ Player.prototype.say = function(message) {
     this.message_element.slideDown("slow");
     var _hide_message = function(){el.slideUp("slow");}
     this.message_timeout = setTimeout(_hide_message, 12000);
-}
+};
 
 // make the walking animation works
 Player.prototype.anim = function() {
