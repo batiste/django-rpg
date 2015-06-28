@@ -5,12 +5,17 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 ADMINS = ()
 MANAGERS = ADMINS
-DATABASE_ENGINE = 'sqlite3'
-DATABASE_NAME = 'dev.db'
-DATABASE_USER = ''
-DATABASE_PASSWORD = ''
-DATABASE_HOST = ''
-DATABASE_PORT = ''
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'dev.db',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
+    }
+}
+
 TIME_ZONE = 'America/Chicago'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
@@ -19,18 +24,28 @@ MEDIA_ROOT = join(__dir__, 'static')
 
 MEDIA_URL = '/static/'
 SECRET_KEY = 'nv8(yg*&1-lon-8i-3jcs0y!01+rem*54051^5xt#^tzujdj!c'
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 )
 ROOT_URLCONF = 'urls'
-TEMPLATE_DIRS = (
-    join(__dir__, 'templates')
-)
+TEMPLATE_DIRS = ('tenplates',)
 INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
