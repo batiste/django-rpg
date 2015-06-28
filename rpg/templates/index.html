@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+    <title>Rpg Chat Demo</title>
+    <link rel="stylesheet" href="{{ MEDIA_URL }}game.css" type="text/css"/>
+  </head>
+  <body>
+    <div id="main">
+        <p id="room_data"><span id="room_name">{{ map.name }}</span>
+            (<span id="room_x">{{ map.x }}</span>, <span id="room_y">{{ map.y }}</span></span>)</p>
+        <div id="right-container">
+            <img src="{{MEDIA_URL}}tileset.png" id="tileset">
+            <br>
+            <input id="save-map" type="submit" value="Save map">
+            <span id="save-message" style="display:none">Map saved.</span>
+
+            <ul id="chat-log"></ul>
+        </div>
+        
+        <div id="map"></div>
+        <div id="input">
+        <form action="/a/message/new" method="post" id="messageform">
+            <input name="body" id="message" autocomplete="off" style="width:480px"/>
+            <input type="submit" value="Say" style="float:right" />
+        </form>
+        <input type="button" value="Magic" id="magic">
+        <input type="button" value="Fight" id="fight">
+        </div>
+        <div id="select"></div>
+    </div>
+    <script>
+        var map_content = "{{ map_content }}";
+        {% if player %}
+        var player_position = {{ player.position|safe }};
+        var public_key = "{{ player.public_key }}";
+        var private_key = "{{ player.private_key }}";
+        var player_name = "{{ player.name }}";
+        {% endif %}
+    </script>
+    <script src="{{MEDIA_URL}}jquery.js"></script>
+    <script src="{{MEDIA_URL}}jquery.json-2.2.js"></script>
+    <script src="{{MEDIA_URL}}common.js"></script>
+    <script src="{{MEDIA_URL}}effects.js"></script>
+    <script src="{{MEDIA_URL}}game.js"></script>
+    <!--<script src="{{MEDIA_URL}}soundmanager2.js"></script>
+    <script>
+    // sound on a GPL licence found on http://blog.dayjo.org/?p=335
+    soundManager.url = '{{MEDIA_URL}}';
+    soundManager.debugMode = false;
+    soundManager.onload = function() {
+    // SM2 is ready to go!
+    var mySound = soundManager.createSound({
+        id: 'aSound',
+        url: '{{MEDIA_URL}}sound.mp3',
+        volume: 50
+    });
+    mySound.play();
+    }
+    </script>-->
+  </body>
+</html>
