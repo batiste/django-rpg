@@ -28,6 +28,9 @@ To install on a ubuntu distribution::
     $ python manage.py syncdb
     $ python run.py
 
+Instead of gevent 1.0.2, gevent 1.1a1 can be used. For this:
+    $ pip uninstall gevent
+    $ pip -v install gevent==1.1a1
 
 Features
 ========
