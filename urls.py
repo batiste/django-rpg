@@ -16,9 +16,3 @@ urlpatterns = [
     url('^a/effect', views.effect),
     url('^a/fight/new', views.fight_new)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-#urlpatterns += patterns('',
-#    ('^static/(?P<path>.*)$', 'django.views.static.serve',
-#        {'document_root': settings.MEDIA_ROOT, 'show_indexes':True}),
-#)
-
