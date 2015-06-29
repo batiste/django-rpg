@@ -3,11 +3,12 @@ A browser based Role Playing Game
 
 A Role Playing Game skeleton that use django and gevent. To start the server, run::
 
+    $ python manage.py syncdb
     $ python run.py
 
-Example chat room from http://bitbucket.org/denis/gevent/src/tip/examples/webchat/chat/views.py
+Example chat room from https://github.com/gevent/gevent/blob/master/examples/webchat/chat/views.py
 
-Tested on Opera, Firefox, Chrome.
+Tested on Chrome, Firefox, Safari.
 
 Screenshot
 ==========
@@ -22,7 +23,7 @@ To install on a ubuntu distribution::
 
     $ sudo apt-get install python python-django python-pip git sqlite3
     $ sudo pip install gevent
-    $ git clone git://github.com/batiste/django-rpg.git
+    $ git clone git://github.com/decitre/django-rpg.git
     $ cd django-rpg/
     $ python manage.py syncdb
     $ python run.py
