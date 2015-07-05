@@ -1,14 +1,21 @@
 A browser based Role Playing Game
 =================================
 
-A Role Playing Game skeleton that use django and gevent. To start the server, run::
+A Role Playing Game skeleton that use a gevent powered django application served by a gunicorn application server. 
+
+To start the gunicor application server, run::
+
+    $ python manage.py syncdb
+    $ gunicorn rpg.wsgi:application --bind localhost:8088
+
+Alternatively, you can start the Django single-threaded development server::
 
     $ python manage.py syncdb
     $ python run.py
 
 Example chat room from https://github.com/gevent/gevent/blob/master/examples/webchat/chat/views.py
 
-Tested on Chrome, Firefox, Safari.
+Tested on Ubuntu Chrome, Firefox, Safari.
 
 Screenshot
 ==========
@@ -16,21 +23,10 @@ Screenshot
 .. image:: http://batiste.dosimple.ch/django-rpg-screenshot.png
 
 
-Install
-=======
+Requirements
+============
 
-To install on a ubuntu distribution::
-
-    $ sudo apt-get install python python-django python-pip git sqlite3
-    $ sudo pip install gevent
-    $ git clone git://github.com/decitre/django-rpg.git
-    $ cd django-rpg/
-    $ python manage.py syncdb
-    $ python run.py
-
-Instead of gevent 1.0.2, gevent 1.1a1 can be used. For this:
-    $ pip uninstall gevent
-    $ pip -v install gevent==1.1a1
+git, sqlite3, django 1.8, pip, gevent (1.0.2 or 1.1a1), gunicorn
 
 Features
 ========
