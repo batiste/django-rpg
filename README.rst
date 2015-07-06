@@ -30,7 +30,7 @@ Screenshot
 Requirements
 ============
 
-sqlite3, django 1.8, .. _gevent: http://www.gevent.org (1.0.2 or 1.1a1), .. _gunicorn: http://gunicorn.org, .. _supervisor: http://supervisord.org , .. _nginx: http://nginx.org
+sqlite3, django 1.8, gevent (1.0.2 or 1.1a1), gunicorn, supervisor, nginx
 
 Features
 ========
