@@ -1,12 +1,16 @@
 A browser based Role Playing Game
 =================================
 
-A Role Playing Game skeleton that use a gevent powered django application served by a gunicorn application server. 
+A Role Playing Game skeleton that uses django, gevent and gunicorn/supervisor/nginx
 
-To start the gunicor application server, run::
+To start the gunicorn/supervisor/nginx application server, run::
 
     $ python manage.py syncdb
-    $ gunicorn rpg.wsgi:application --bind localhost:8088
+    $ ./run.sh
+
+To stop it::
+
+    $ nginx -s stop && supervisorctl -c $(pwd)/supervisor.conf shutdown
 
 Alternatively, you can start the Django single-threaded development server::
 
@@ -26,7 +30,7 @@ Screenshot
 Requirements
 ============
 
-git, sqlite3, django 1.8, pip, gevent (1.0.2 or 1.1a1), gunicorn
+sqlite3, django 1.8, .. _gevent: http://www.gevent.org (1.0.2 or 1.1a1), .. _gunicorn: http://gunicorn.org, .. _supervisor: http://supervisord.org , .. _nginx: http://nginx.org
 
 Features
 ========
