@@ -21,16 +21,10 @@ Example chat room from https://github.com/gevent/gevent/blob/master/examples/web
 
 Tested on Ubuntu Chrome, Firefox, Safari.
 
-Screenshot
-==========
-
-.. image:: http://batiste.dosimple.ch/django-rpg-screenshot.png
-
-
 Requirements
 ============
 
-sqlite3, django 1.8, gevent (1.0.2 or 1.1a1), gunicorn, supervisor, nginx
+sqlite3, django 1.8, ujson, gevent (1.0.2 or 1.1a1), gunicorn, supervisor, nginx
 
 Features
 ========
